@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sammlung hochladen</title>
+</head>
+<body>
+<form action="/sammlungen/add" method="POST" enctype="multipart/form-data">
+    <label for="category">Kategorie</label>
+    <input type="text" id="category" name="category">
+
+    <label for="images">Bilder der Sammlung: </label>
+    <input type="file" id="images" name="images" accept="image/*" multiple>
+
+    <label for="description">Beschreibung</label>
+    <input type="text" id="description" name="description">
+
+    <input type="submit">
+</form>
+</body>
+</html>
