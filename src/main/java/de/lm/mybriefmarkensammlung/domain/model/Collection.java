@@ -4,7 +4,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Table("collection")
@@ -15,18 +14,20 @@ public class Collection {
 
     private String category;
     private String description;
-    private List<Long> imageIds;
+
+    @MappedCollection(idColumn = "collection_id", keyColumn = "order_index")
+    private List<Image> images;
 
     public Collection() {}
 
-    public Collection(String category, String description, List<Long> imageIds) {
+    public Collection(String category, String description, List<Image> images) {
         this.category = category;
         this.description = description;
-        this.imageIds = imageIds;
+        this.images = images;
     }
 
-    public void addImage(Long imageId) {
-        imageIds.add(imageId);
+    public void addImage(Image image) {
+        images.add(image);
     }
 
     public Long getId() {
@@ -53,11 +54,11 @@ public class Collection {
         this.description = description;
     }
 
-    public List<Long> getImageIds() {
-        return imageIds;
+    public List<Image> getImages() {
+        return images;
     }
 
-    public void setImages(List<Long> imageIds) {
-        this.imageIds = imageIds;
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 }

@@ -34,6 +34,6 @@ public class CollectionController {
 
         collectionService.addCollection(category, images, description);
 
-        return "redirect:/sammlung/add";
+        return "redirect:/sammlungen/add";
     }
 }

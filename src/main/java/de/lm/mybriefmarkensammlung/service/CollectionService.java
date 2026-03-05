@@ -22,16 +22,16 @@ public class CollectionService {
         this.imageRepository = imageRepository;
     }
 
-    public void addCollection(String category, MultipartFile[] images, String description) throws IOException {
-        List<Long> imageIds = new ArrayList<>();
+    public void addCollection(String category, MultipartFile[] files, String description) throws IOException {
+        List<Image> images = new ArrayList<>();
 
-        for(MultipartFile file : images) {
+        for(MultipartFile file : files) {
             Image img = new Image(file.getOriginalFilename(), file.getBytes());
-            img = imageRepository.save(img);
-            imageIds.add(img.getId());
+            //img = imageRepository.save(img);
+            images.add(img);
         }
 
-        Collection collection = new Collection(category, description, imageIds);
+        Collection collection = new Collection(category, description, images);
         collectionRepository.save(collection);
     }
 }
