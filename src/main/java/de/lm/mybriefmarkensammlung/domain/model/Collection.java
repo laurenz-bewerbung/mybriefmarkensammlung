@@ -4,29 +4,28 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table("collection")
 public class Collection {
 
     @Id
     private Long id;
-
     private String category;
     private String description;
 
-    @MappedCollection(idColumn = "collection_id", keyColumn = "order_index")
-    private List<Image> images;
+    @MappedCollection(idColumn = "collection_id", keyColumn = "image_id")
+    private Set<CollectionImage> images = new HashSet<>();
 
     public Collection() {}
 
-    public Collection(String category, String description, List<Image> images) {
+    public Collection(String category, String description, Set<CollectionImage> images) {
         this.category = category;
-        this.description = description;
         this.images = images;
     }
 
-    public void addImage(Image image) {
+    public void addImage(CollectionImage image) {
         images.add(image);
     }
 
@@ -54,11 +53,11 @@ public class Collection {
         this.description = description;
     }
 
-    public List<Image> getImages() {
+    public Set<CollectionImage> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(Set<CollectionImage> images) {
         this.images = images;
     }
 }

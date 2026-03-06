@@ -13,7 +13,7 @@ public class Image {
 
     public Image() {}
 
-    public Image(String filename, byte[] content) {
+    public Image(String filename, byte[] content, Integer orderId) {
         this.filename = filename;
         this.content = content;
     }
