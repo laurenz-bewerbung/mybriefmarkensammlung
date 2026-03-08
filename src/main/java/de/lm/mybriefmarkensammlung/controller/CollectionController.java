@@ -4,8 +4,10 @@ import de.lm.mybriefmarkensammlung.service.CollectionService;
 import de.lm.mybriefmarkensammlung.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,12 @@ public class CollectionController {
     public String overview(Model model) {
         model.addAttribute("collections", collectionService.getCollections());
         return "sammlungen/overview";
+    }
+
+    @GetMapping("/sammlungen/{id}")
+    public String details(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("collection", collectionService.getCollection(id));
+        return "sammlungen/details";
     }
 
     @GetMapping("/sammlungen/add")
