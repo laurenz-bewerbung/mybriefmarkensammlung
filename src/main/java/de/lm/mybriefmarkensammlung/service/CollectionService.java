@@ -26,14 +26,14 @@ public class CollectionService {
     }
 
     @Transactional
-    public void addCollection(String title, Long categoryId, Long[] imageIds, String description, Boolean isExhibition, ExhibitionClass exhibitionClass) {
+    public void addCollection(String title, Long categoryId, Long[] imageIds, String description, Boolean isExhibition, Optional<ExhibitionClass> exhibitionClass) {
 
         Set<CollectionImage> images = new HashSet<>();
         for(int i = 0; i < imageIds.length; i++) {
             images.add(new CollectionImage(imageIds[i], i));
         }
 
-        Collection collection = new Collection(title, categoryId, description, images, isExhibition, exhibitionClass.getDisplayName());
+        Collection collection = new Collection(title, categoryId, description, images, isExhibition, exhibitionClass.isPresent() ? exhibitionClass.get().getDisplayName() : null);
         collectionRepository.save(collection);
     }
 

@@ -64,7 +64,7 @@ public class CollectionController {
                            @RequestParam("images") MultipartFile[] images,
                            @RequestParam("description") String description,
                            @RequestParam(value = "isExhibition", defaultValue = "false") boolean isExhibition,
-                           @RequestParam(value = "exhibitionClass", required = false) ExhibitionClass exhibitionClass) throws IOException {
+                           @RequestParam("exhibitionClass") Optional<ExhibitionClass> exhibitionClass) throws IOException {
 
         Long[] imageIds = new Long[images.length];
         for(int i = 0; i < images.length; i++) {
