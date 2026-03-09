@@ -13,6 +13,7 @@ public class Collection {
     @Id
     private Long id;
 
+    private String title;
     private Long categoryId;
     private Boolean isExhibition;
     private String exhibitionClass;
@@ -23,7 +24,8 @@ public class Collection {
 
     public Collection() {}
 
-    public Collection(Long categoryId, String description, Set<CollectionImage> images, Boolean isExhibition, String exhibitionClass) {
+    public Collection(String title, Long categoryId, String description, Set<CollectionImage> images, Boolean isExhibition, String exhibitionClass) {
+        this.title = title;
         this.categoryId = categoryId;
         this.isExhibition = isExhibition;
         this.exhibitionClass = exhibitionClass;
@@ -81,5 +83,13 @@ public class Collection {
 
     public void setImages(Set<CollectionImage> images) {
         this.images = images;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

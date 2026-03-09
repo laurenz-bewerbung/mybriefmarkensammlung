@@ -51,7 +51,8 @@ public class CollectionController {
     }
 
     @PostMapping("/sammlungen/add")
-    public String add_form(@RequestParam("category") Long categoryId,
+    public String add_form(@RequestParam("title") String title,
+                           @RequestParam("category") Long categoryId,
                            @RequestParam("images") MultipartFile[] images,
                            @RequestParam("description") String description,
                            @RequestParam(value = "isExhibition", defaultValue = "false") boolean isExhibition,
@@ -63,7 +64,7 @@ public class CollectionController {
             imageIds[i] = id;
         }
 
-        collectionService.addCollection(categoryId, imageIds, description, isExhibition, exhibitionClass);
+        collectionService.addCollection(title, categoryId, imageIds, description, isExhibition, exhibitionClass);
 
         return "redirect:/sammlungen";
     }

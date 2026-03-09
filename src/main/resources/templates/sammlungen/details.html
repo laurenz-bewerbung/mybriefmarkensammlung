@@ -37,7 +37,7 @@
         <div class="breadcrumb-container">
             <div th:replace="~{categories/list :: displayPath(list=${collection.categoryList})}"></div>
         </div>
-        <p class="text-muted" th:text="${collection.description}">Beschreibung</p>
+        <p class="text-muted" th:text="${collection.title}">Titel</p>
     </div>
 
     <div class="row g-4">
@@ -61,7 +61,7 @@
         </div>
 
     </div>
-
+    <p class="text-muted" th:text="${collection.description}">Beschreibung</p>
     <p th:if="${collection.isExhibition}">
         Ausstellungsklasse: <span class="card-text text-muted" th:text="${collection.exhibitionClass}"></span>
     </p>

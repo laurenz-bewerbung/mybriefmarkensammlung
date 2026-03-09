@@ -6,6 +6,9 @@
 </head>
 <body>
 <form action="/sammlungen/add" method="POST" enctype="multipart/form-data">
+    <label for="title">Titel</label>
+    <input type="text" id="title" name="title">
+
     <label for="category">Kategorie</label>
     <div id="category" th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${currentParentId})}"></div>
 

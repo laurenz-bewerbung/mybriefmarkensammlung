@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS category (
 
 CREATE TABLE IF NOT EXISTS collection (
     id SERIAL PRIMARY KEY,
+    title VARCHAR(255),
     category_id BIGINT REFERENCES category(id) ON DELETE CASCADE,
     description TEXT,
     is_exhibition BOOLEAN,

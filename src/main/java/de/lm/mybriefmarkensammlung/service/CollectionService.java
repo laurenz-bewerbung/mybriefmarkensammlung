@@ -25,21 +25,22 @@ public class CollectionService {
     }
 
     @Transactional
-    public void addCollection(Long categoryId, Long[] imageIds, String description, Boolean isExhibition, ExhibitionClass exhibitionClass) {
+    public void addCollection(String title, Long categoryId, Long[] imageIds, String description, Boolean isExhibition, ExhibitionClass exhibitionClass) {
 
         Set<CollectionImage> images = new HashSet<>();
         for(int i = 0; i < imageIds.length; i++) {
             images.add(new CollectionImage(imageIds[i], i));
         }
 
-        Collection collection = new Collection(categoryId, description, images, isExhibition, exhibitionClass.getDisplayName());
+        Collection collection = new Collection(title, categoryId, description, images, isExhibition, exhibitionClass.getDisplayName());
         collectionRepository.save(collection);
     }
 
     public CollectionDTO getCollection(Long id) {
-        Collection collection = collectionRepository.findById(id).orElse(new Collection(-1L, "Sammlung konnte nicht gefunden werden", new HashSet<>(), false, ""));
+        Collection collection = collectionRepository.findById(id).orElse(new Collection("Sammlung konnte nicht gefunden werden", -1L, "", new HashSet<>(), false, ""));
 
         CollectionDTO collectionDTO = new CollectionDTO(collection.getId(),
+                                                        collection.getTitle(),
                                                         categoryService.getCategoryList(collection.getCategoryId()),
                                                         collection.getDescription(),
                                                         collection.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
@@ -55,6 +56,7 @@ public class CollectionService {
         List<CollectionDTO> collectionDTOS = new ArrayList<>();
         for (Collection c : collections) {
             CollectionDTO collectionDTO = new CollectionDTO(c.getId(),
+                                                            c.getTitle(),
                                                             categoryService.getCategoryList(c.getCategoryId()),
                                                             c.getDescription(),
                                                             c.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
