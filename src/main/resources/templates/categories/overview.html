@@ -15,7 +15,7 @@
 <ul th:fragment="categoryTree(nodes)" class="tree-group">
     <li th:each="node : ${nodes}" th:id="'node-' + ${node.category.id}" class="category-node">
         <div class="category-content">
-            <span class="category-name" th:text="${node.category.category}">Kategorie</span>
+            <span class="category-name" th:text="${node.category.name}">Kategorie</span>
 
             <button type="button" class="btn-add" th:onclick="'showInlineForm(' + ${node.category.id} + ')'">+</button>
             <div th:id="'form-container-' + ${node.category.id}" class="inline-form-container"></div>

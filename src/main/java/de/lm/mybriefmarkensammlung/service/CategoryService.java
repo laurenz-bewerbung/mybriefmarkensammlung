@@ -1,6 +1,7 @@
 package de.lm.mybriefmarkensammlung.service;
 
 import de.lm.mybriefmarkensammlung.domain.model.Category;
+import de.lm.mybriefmarkensammlung.dto.CategoryDTO;
 import de.lm.mybriefmarkensammlung.dto.CategoryTreeDTO;
 import de.lm.mybriefmarkensammlung.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class CategoryService {
 
         Map<Long, CategoryTreeDTO> map = new HashMap<>();
         for (Category c : all) {
-            map.put(c.getId(), new CategoryTreeDTO(c, new ArrayList<>()));
+            map.put(c.getId(), new CategoryTreeDTO(new CategoryDTO(c.getId(), c.getCategory()), new ArrayList<>()));
         }
 
         List<CategoryTreeDTO> roots = new ArrayList<>();
@@ -47,12 +48,12 @@ public class CategoryService {
         return roots.get(0).children();
     }
 
-    public List<Category> getCategoryList(Long categoryId) {
+    public List<CategoryDTO> getCategoryList(Long categoryId) {
 
-        List<Category> categoryList = new ArrayList<>();
+        List<CategoryDTO> categoryList = new ArrayList<>();
         while(categoryId != 1) {
             Category currentHead = categoryRepository.findById(categoryId).orElseThrow();
-            categoryList.addFirst(currentHead);
+            categoryList.addFirst(new CategoryDTO(currentHead.getId(), currentHead.getCategory()));
             categoryId = currentHead.getParentId();
         }
 

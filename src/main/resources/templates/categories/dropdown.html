@@ -12,7 +12,7 @@
 <th:block th:fragment="recursiveOpts(nodes, indent)">
     <th:block th:each="node : ${nodes}">
         <option th:value="${node.category.id}"
-                th:text="${indent + ' ' + node.category.category}"
+                th:text="${indent + ' ' + node.category.name}"
                 th:selected="${node.category.id == selectedId}">
         </option>
         <th:block th:if="${!node.children.isEmpty()}"
