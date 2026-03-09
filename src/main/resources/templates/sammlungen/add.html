@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sammlung hochladen</title>
+    <script th:src="@{/js/toggle-exhibition.js}" defer></script>
 </head>
 <body>
 <form action="/sammlungen/add" method="POST" enctype="multipart/form-data">
@@ -28,19 +29,5 @@
 
     <input type="submit">
 </form>
-
-<script>
-    function toggleExhibition() {
-        const checkbox = document.getElementById('isExhibition');
-        const container = document.getElementById('exhibitionContainer');
-        const select = document.querySelector('#exhibitionContainer select');
-
-        container.hidden = !checkbox.checked;
-        select.required = checkbox.checked;
-        if (!checkbox.checked) select.value = "";
-    }
-    // Initialer Check beim Laden
-    document.addEventListener("DOMContentLoaded", toggleExhibition);
-</script>
 </body>
 </html>

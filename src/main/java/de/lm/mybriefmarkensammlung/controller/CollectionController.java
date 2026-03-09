@@ -34,6 +34,8 @@ public class CollectionController {
     @GetMapping("/sammlungen")
     public String overview(Model model) {
         model.addAttribute("collections", collectionService.getCollections());
+        model.addAttribute("categories", categoryService.getCategoryTree());
+        model.addAttribute("exhibitionClasses", ExhibitionClass.values());
         return "sammlungen/overview";
     }
 

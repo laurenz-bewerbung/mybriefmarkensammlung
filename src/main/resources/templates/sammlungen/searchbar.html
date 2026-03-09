@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="searchBar" class="search-container">
+    <script th:src="@{/js/toggle-exhibition.js}" defer></script>
+    <form th:action="@{/sammlungen}" method="GET" class="search-form">
+
+        <label for="title">Titel</label>
+        <input type="text" id="title" name="title" th:value="${param.title}">
+
+        <label for="category">Kategorie</label>
+        <div id="category" th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${currentParentId})}"></div>
+
+        <label for="isExhibition">Offizielles Ausstellungs-Exponat?</label>
+        <input type="checkbox" id="isExhibition" name="isExhibition" onchange="toggleExhibition()">
+
+        <div id="exhibitionContainer" hidden>
+            <label for="exhibitionClass">Ausstellungsklasse:</label>
+            <div id="exhibitionClass" th:replace="~{sammlungen/exhibition-dropdown :: exhibitionDropdown(name='exhibitionClass', classes=${exhibitionClasses}, selectedClass=null)}"> </div>
+        </div>
+
+        <button type="submit">Suchen</button>
+        <a th:href="@{/sammlungen}" class="btn-reset">Reset</a>
+    </form>
+</div>
+
+</body>
+</html>

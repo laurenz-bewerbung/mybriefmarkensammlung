@@ -37,6 +37,8 @@
         </a>
     </div>
 
+    <div th:replace="~{sammlungen/searchbar :: searchBar}"></div>
+
     <div class="row g-4">
 
         <div class="col-md-6 col-lg-4" th:each="collection : ${collections}">
