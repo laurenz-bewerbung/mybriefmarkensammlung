@@ -4,7 +4,7 @@
 
 <div th:fragment="displayPath(list)" class="category-path">
     <th:block th:each="cat, iterStat : ${list}">
-        <span th:text="${cat.name}">Kategorie</span>
+        <a th:href="@{/sammlungen(category=${cat.id})}"><span th:text="${cat.name}">Kategorie</span></a>
 
         <span th:if="${!iterStat.last}" th:text="' > '"></span>
     </th:block>

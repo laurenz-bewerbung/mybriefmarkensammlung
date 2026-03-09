@@ -52,12 +52,13 @@ public class CollectionService {
     }
 
     public List<CollectionDTO> getCollections(Optional<String> title, Optional<Long> categoryId, Optional<Boolean> isExhibition, Optional<ExhibitionClass> exhibitionClass) {
-        String exhibition = null;
-        if(!exhibitionClass.isEmpty()) {
-            exhibition = exhibitionClass.get().getDisplayName();
-        }
 
-        List<Collection> collections = collectionRepository.search(title.orElse(null), categoryId.orElse(null), isExhibition.orElse(null), exhibition);
+        List<Collection> collections = collectionRepository.search(
+                title.orElse(null),
+                categoryId.isPresent() ? categoryService.getAllChildIds(categoryId.get()).toArray(new Long[0]) : null,
+                isExhibition.orElse(null),
+                exhibitionClass.isPresent() ? exhibitionClass.get().getDisplayName() : null
+        );
 
         List<CollectionDTO> collectionDTOS = new ArrayList<>();
         for (Collection c : collections) {

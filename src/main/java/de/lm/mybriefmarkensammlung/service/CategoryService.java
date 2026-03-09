@@ -59,4 +59,27 @@ public class CategoryService {
 
         return categoryList;
     }
+
+    public List<Long> getAllChildIds(Long categoryId) {
+        List<CategoryDTO> categoryDTOS = getCategoryList(categoryId);
+        List<CategoryTreeDTO> categoryTree = getCategoryTree();
+
+        for(CategoryDTO c : categoryDTOS) {
+            categoryTree = categoryTree.stream().filter(x -> x.category().id() == c.id()).findFirst().orElseThrow().children();
+        }
+
+        List<Long> categoryIds = new ArrayList<>();
+        categoryIds.add(categoryId);
+
+        getAllChildIds(categoryTree, categoryIds);
+
+        return categoryIds;
+    }
+
+    private void getAllChildIds(List<CategoryTreeDTO> categoryTree, List<Long> categoryIds) {
+        for (CategoryTreeDTO c : categoryTree) {
+            categoryIds.add(c.category().id());
+            getAllChildIds(c.children(), categoryIds);
+        }
+    }
 }
