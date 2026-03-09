@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Controller()
 public class CollectionController {
@@ -32,8 +33,13 @@ public class CollectionController {
 
 
     @GetMapping("/sammlungen")
-    public String overview(Model model) {
-        model.addAttribute("collections", collectionService.getCollections());
+    public String overview(Model model,
+                           @RequestParam("title") Optional<String> title,
+                           @RequestParam("category") Optional<Long> categoryId,
+                           @RequestParam("isExhibition") Optional<Boolean> isExhibition,
+                           @RequestParam("exhibitionClass") Optional<ExhibitionClass> exhibitionClass) {
+
+        model.addAttribute("collections", collectionService.getCollections(title, categoryId, isExhibition, exhibitionClass));
         model.addAttribute("categories", categoryService.getCategoryTree());
         model.addAttribute("exhibitionClasses", ExhibitionClass.values());
         return "sammlungen/overview";

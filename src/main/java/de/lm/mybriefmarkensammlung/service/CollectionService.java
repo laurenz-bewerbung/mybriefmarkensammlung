@@ -8,6 +8,7 @@ import de.lm.mybriefmarkensammlung.repository.CollectionRepository;
 import de.lm.mybriefmarkensammlung.repository.ImageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -50,8 +51,13 @@ public class CollectionService {
         return collectionDTO;
     }
 
-    public List<CollectionDTO> getCollections() {
-        List<Collection> collections = (List<Collection>) collectionRepository.findAll();
+    public List<CollectionDTO> getCollections(Optional<String> title, Optional<Long> categoryId, Optional<Boolean> isExhibition, Optional<ExhibitionClass> exhibitionClass) {
+        String exhibition = null;
+        if(!exhibitionClass.isEmpty()) {
+            exhibition = exhibitionClass.get().getDisplayName();
+        }
+
+        List<Collection> collections = collectionRepository.search(title.orElse(null), categoryId.orElse(null), isExhibition.orElse(null), exhibition);
 
         List<CollectionDTO> collectionDTOS = new ArrayList<>();
         for (Collection c : collections) {
