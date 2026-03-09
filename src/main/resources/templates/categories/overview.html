@@ -1,0 +1,36 @@
+<head>
+    <script th:src="@{/js/category-tree.js}" defer></script>
+</head>
+
+<div class="category-tree-container">
+    <h2>Kategorien</h2>
+
+    <ul th:if="${categories != null}"
+        th:replace="~{::categoryTree(nodes=${categories})}">
+    </ul>
+
+    <p th:if="${categories == null || categories.isEmpty()}">Keine Kategorien vorhanden.</p>
+</div>
+
+<ul th:fragment="categoryTree(nodes)" class="tree-group">
+    <li th:each="node : ${nodes}" th:id="'node-' + ${node.category.id}" class="category-node">
+        <div class="category-content">
+            <span class="category-name" th:text="${node.category.category}">Kategorie</span>
+
+            <button type="button" class="btn-add" th:onclick="'showInlineForm(' + ${node.category.id} + ')'">+</button>
+            <div th:id="'form-container-' + ${node.category.id}" class="inline-form-container"></div>
+        </div>
+
+        <ul class="children-container" th:if="${!node.children.isEmpty()}">
+            <div th:replace="~{::categoryTree(nodes=${node.children})}"></div>
+        </ul>
+    </li>
+</ul>
+<ul class="tree-group">
+    <li id="node-1" class="category-node">
+        <div class="category-content">
+            <button type="button" class="btn-add" th:onclick="'showInlineForm(1)'">+</button>
+            <div id="form-container-1" class="inline-form-container"></div>
+        </div>
+    </li>
+</ul>

@@ -34,7 +34,9 @@
     <div class="header">
         <a href="/sammlungen" class="btn btn-outline-secondary mb-3">← Zurück</a>
 
-        <h1 class="fw-bold" th:text="${collection.category}">Kategorie</h1>
+        <div class="breadcrumb-container">
+            <div th:replace="~{categories/list :: displayPath(list=${collection.categoryList})}"></div>
+        </div>
         <p class="text-muted" th:text="${collection.description}">Beschreibung</p>
     </div>
 

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="displayPath(list)" class="category-path">
+    <th:block th:each="cat, iterStat : ${list}">
+        <span th:text="${cat.category}">Kategorie</span>
+
+        <span th:if="${!iterStat.last}" th:text="' > '"></span>
+    </th:block>
+</div>
+
+</body>
+</html>

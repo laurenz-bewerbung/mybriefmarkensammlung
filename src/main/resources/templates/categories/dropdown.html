@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="dropdown(name, selectedId)">
+    <select th:name="${name}" th:id="${name}">
+        <option value="">-- Keine (Hauptkategorie) --</option>
+        <th:block th:insert="~{::recursiveOpts(nodes=${categories}, indent='')}"></th:block>
+    </select>
+</div>
+
+<th:block th:fragment="recursiveOpts(nodes, indent)">
+    <th:block th:each="node : ${nodes}">
+        <option th:value="${node.category.id}"
+                th:text="${indent + ' ' + node.category.category}"
+                th:selected="${node.category.id == selectedId}">
+        </option>
+        <th:block th:if="${!node.children.isEmpty()}"
+                  th:insert="~{::recursiveOpts(nodes=${node.children}, indent=${indent + '--'})}">
+        </th:block>
+    </th:block>
+</th:block>
+
+</body>
+</html>

@@ -1,10 +1,16 @@
--- DROP TABLE IF EXISTS collection_image CASCADE;
--- DROP TABLE IF EXISTS image CASCADE;
+ -- DROP TABLE IF EXISTS collection_image CASCADE;
+ -- DROP TABLE IF EXISTS image CASCADE;
 -- DROP TABLE IF EXISTS collection CASCADE;
+
+CREATE TABLE IF NOT EXISTS category (
+    id SERIAL PRIMARY KEY,
+    category VARCHAR(255),
+    parent_id BIGINT
+);
 
 CREATE TABLE IF NOT EXISTS collection (
     id SERIAL PRIMARY KEY,
-    category VARCHAR(255),
+    category_id BIGINT REFERENCES category(id) ON DELETE CASCADE,
     description TEXT
 );
 

@@ -7,7 +7,7 @@
 <body>
 <form action="/sammlungen/add" method="POST" enctype="multipart/form-data">
     <label for="category">Kategorie</label>
-    <input type="text" id="category" name="category">
+    <div id="category" th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${currentParentId})}"></div>
 
     <label for="images">Bilder der Sammlung: </label>
     <input type="file" id="images" name="images" accept="image/*" multiple>

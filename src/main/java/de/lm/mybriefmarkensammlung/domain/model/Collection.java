@@ -12,7 +12,8 @@ public class Collection {
 
     @Id
     private Long id;
-    private String category;
+
+    private Long categoryId;
     private String description;
 
     @MappedCollection(idColumn = "collection_id", keyColumn = "image_id")
@@ -20,8 +21,8 @@ public class Collection {
 
     public Collection() {}
 
-    public Collection(String category, String description, Set<CollectionImage> images) {
-        this.category = category;
+    public Collection(Long categoryId, String description, Set<CollectionImage> images) {
+        this.categoryId = categoryId;
         this.images = images;
     }
 
@@ -37,12 +38,12 @@ public class Collection {
         this.id = id;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getDescription() {

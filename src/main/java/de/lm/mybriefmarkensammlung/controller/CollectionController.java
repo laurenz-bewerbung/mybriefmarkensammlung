@@ -1,5 +1,7 @@
 package de.lm.mybriefmarkensammlung.controller;
 
+import de.lm.mybriefmarkensammlung.domain.model.Category;
+import de.lm.mybriefmarkensammlung.service.CategoryService;
 import de.lm.mybriefmarkensammlung.service.CollectionService;
 import de.lm.mybriefmarkensammlung.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,12 @@ public class CollectionController {
 
     private CollectionService collectionService;
     private ImageService imageService;
+    private CategoryService categoryService;
 
-    public CollectionController(CollectionService collectionService, ImageService imageService) {
+    public CollectionController(CollectionService collectionService, ImageService imageService, CategoryService categoryService) {
         this.collectionService = collectionService;
         this.imageService = imageService;
+        this.categoryService = categoryService;
     }
 
 
@@ -39,12 +43,13 @@ public class CollectionController {
     }
 
     @GetMapping("/sammlungen/add")
-    public String add() {
+    public String add(Model model) {
+        model.addAttribute("categories", categoryService.getCategoryTree());
         return "sammlungen/add";
     }
 
     @PostMapping("/sammlungen/add")
-    public String add_form(@RequestParam("category") String category,
+    public String add_form(@RequestParam("category") Long categoryId,
                            @RequestParam("images") MultipartFile[] images,
                            @RequestParam("description") String description) throws IOException {
 
@@ -54,7 +59,7 @@ public class CollectionController {
             imageIds[i] = id;
         }
 
-        collectionService.addCollection(category, imageIds, description);
+        collectionService.addCollection(categoryId, imageIds, description);
 
         return "redirect:/sammlungen";
     }

@@ -43,7 +43,9 @@
             <div class="card shadow-sm h-100">
 
                 <div class="card-body">
-                    <h5 class="card-title fw-bold" th:text="${collection.category}"></h5>
+                    <div class="breadcrumb-container">
+                        <div th:replace="~{categories/list :: displayPath(list=${collection.categoryList})}"></div>
+                    </div>
                     <p class="card-text text-muted" th:text="${collection.description}"></p>
 
                     <div class="row" th:if="${collection.images.size() > 0}">
