@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="exhibitionDropdown(name, classes, selectedClass)">
+    <select th:name="${name}" th:id="${name}">
+        <option value="">-- Bitte wählen --</option>
+        <option th:each="exClass : ${classes}"
+                th:value="${exClass}"
+                th:text="${exClass.displayName}"
+                th:selected="${exClass == selectedClass}">
+        </option>
+    </select>
+</div>
+
+</body>
+</html>

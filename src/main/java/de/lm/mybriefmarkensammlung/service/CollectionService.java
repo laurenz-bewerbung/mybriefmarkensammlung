@@ -1,9 +1,7 @@
 package de.lm.mybriefmarkensammlung.service;
 
-import de.lm.mybriefmarkensammlung.domain.model.Category;
+import de.lm.mybriefmarkensammlung.domain.model.*;
 import de.lm.mybriefmarkensammlung.domain.model.Collection;
-import de.lm.mybriefmarkensammlung.domain.model.CollectionImage;
-import de.lm.mybriefmarkensammlung.domain.model.Image;
 import de.lm.mybriefmarkensammlung.dto.CollectionDTO;
 import de.lm.mybriefmarkensammlung.repository.CategoryRepository;
 import de.lm.mybriefmarkensammlung.repository.CollectionRepository;
@@ -27,24 +25,26 @@ public class CollectionService {
     }
 
     @Transactional
-    public void addCollection(Long categoryId, Long[] imageIds, String description) {
+    public void addCollection(Long categoryId, Long[] imageIds, String description, Boolean isExhibition, ExhibitionClass exhibitionClass) {
 
         Set<CollectionImage> images = new HashSet<>();
         for(int i = 0; i < imageIds.length; i++) {
             images.add(new CollectionImage(imageIds[i], i));
         }
 
-        Collection collection = new Collection(categoryId, description, images);
+        Collection collection = new Collection(categoryId, description, images, isExhibition, exhibitionClass.getDisplayName());
         collectionRepository.save(collection);
     }
 
     public CollectionDTO getCollection(Long id) {
-        Collection collection = collectionRepository.findById(id).orElse(new Collection(-1L, "Sammlung konnte nicht gefunden werden", new HashSet<>()));
+        Collection collection = collectionRepository.findById(id).orElse(new Collection(-1L, "Sammlung konnte nicht gefunden werden", new HashSet<>(), false, ""));
 
         CollectionDTO collectionDTO = new CollectionDTO(collection.getId(),
                                                         categoryService.getCategoryList(collection.getCategoryId()),
                                                         collection.getDescription(),
-                                                        collection.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList());
+                                                        collection.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
+                                                        collection.getExhibition(),
+                                                        collection.getExhibitionClass());
 
         return collectionDTO;
     }
@@ -57,7 +57,9 @@ public class CollectionService {
             CollectionDTO collectionDTO = new CollectionDTO(c.getId(),
                                                             categoryService.getCategoryList(c.getCategoryId()),
                                                             c.getDescription(),
-                                                            c.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList());
+                                                            c.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
+                                                            c.getExhibition(),
+                                                            c.getExhibitionClass());
             collectionDTOS.add(collectionDTO);
         }
 

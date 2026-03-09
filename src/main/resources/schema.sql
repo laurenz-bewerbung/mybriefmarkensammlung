@@ -1,5 +1,5 @@
- -- DROP TABLE IF EXISTS collection_image CASCADE;
- -- DROP TABLE IF EXISTS image CASCADE;
+-- DROP TABLE IF EXISTS collection_image CASCADE;
+-- DROP TABLE IF EXISTS image CASCADE;
 -- DROP TABLE IF EXISTS collection CASCADE;
 
 CREATE TABLE IF NOT EXISTS category (
@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS category (
 CREATE TABLE IF NOT EXISTS collection (
     id SERIAL PRIMARY KEY,
     category_id BIGINT REFERENCES category(id) ON DELETE CASCADE,
-    description TEXT
+    description TEXT,
+    is_exhibition BOOLEAN,
+    exhibition_class VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS image (

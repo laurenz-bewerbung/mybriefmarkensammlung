@@ -14,6 +14,8 @@ public class Collection {
     private Long id;
 
     private Long categoryId;
+    private Boolean isExhibition;
+    private String exhibitionClass;
     private String description;
 
     @MappedCollection(idColumn = "collection_id", keyColumn = "image_id")
@@ -21,8 +23,11 @@ public class Collection {
 
     public Collection() {}
 
-    public Collection(Long categoryId, String description, Set<CollectionImage> images) {
+    public Collection(Long categoryId, String description, Set<CollectionImage> images, Boolean isExhibition, String exhibitionClass) {
         this.categoryId = categoryId;
+        this.isExhibition = isExhibition;
+        this.exhibitionClass = exhibitionClass;
+        this.description = description;
         this.images = images;
     }
 
@@ -42,8 +47,24 @@ public class Collection {
         return categoryId;
     }
 
-    public void setCategory(Long categoryId) {
+    public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public Boolean getExhibition() {
+        return isExhibition;
+    }
+
+    public void setExhibition(Boolean exhibition) {
+        isExhibition = exhibition;
+    }
+
+    public String getExhibitionClass() {
+        return exhibitionClass;
+    }
+
+    public void setExhibitionClass(String exhibitionClass) {
+        this.exhibitionClass = exhibitionClass;
     }
 
     public String getDescription() {

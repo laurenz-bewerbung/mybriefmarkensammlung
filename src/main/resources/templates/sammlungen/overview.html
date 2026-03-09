@@ -59,6 +59,10 @@
                         </div>
                     </div>
 
+                    <p th:if="${collection.isExhibition}">
+                        Ausstellungsklasse: <span class="card-text text-muted" th:text="${collection.exhibitionClass}"></span>
+                    </p>
+
                 </div>
 
             </div>

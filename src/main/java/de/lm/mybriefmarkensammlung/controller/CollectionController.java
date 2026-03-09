@@ -1,6 +1,7 @@
 package de.lm.mybriefmarkensammlung.controller;
 
 import de.lm.mybriefmarkensammlung.domain.model.Category;
+import de.lm.mybriefmarkensammlung.domain.model.ExhibitionClass;
 import de.lm.mybriefmarkensammlung.service.CategoryService;
 import de.lm.mybriefmarkensammlung.service.CollectionService;
 import de.lm.mybriefmarkensammlung.service.ImageService;
@@ -45,13 +46,16 @@ public class CollectionController {
     @GetMapping("/sammlungen/add")
     public String add(Model model) {
         model.addAttribute("categories", categoryService.getCategoryTree());
+        model.addAttribute("exhibitionClasses", ExhibitionClass.values());
         return "sammlungen/add";
     }
 
     @PostMapping("/sammlungen/add")
     public String add_form(@RequestParam("category") Long categoryId,
                            @RequestParam("images") MultipartFile[] images,
-                           @RequestParam("description") String description) throws IOException {
+                           @RequestParam("description") String description,
+                           @RequestParam(value = "isExhibition", defaultValue = "false") boolean isExhibition,
+                           @RequestParam(value = "exhibitionClass", required = false) ExhibitionClass exhibitionClass) throws IOException {
 
         Long[] imageIds = new Long[images.length];
         for(int i = 0; i < images.length; i++) {
@@ -59,7 +63,7 @@ public class CollectionController {
             imageIds[i] = id;
         }
 
-        collectionService.addCollection(categoryId, imageIds, description);
+        collectionService.addCollection(categoryId, imageIds, description, isExhibition, exhibitionClass);
 
         return "redirect:/sammlungen";
     }
