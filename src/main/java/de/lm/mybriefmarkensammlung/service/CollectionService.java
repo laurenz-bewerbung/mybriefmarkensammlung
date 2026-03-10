@@ -2,16 +2,12 @@ package de.lm.mybriefmarkensammlung.service;
 
 import de.lm.mybriefmarkensammlung.domain.model.*;
 import de.lm.mybriefmarkensammlung.domain.model.Collection;
-import de.lm.mybriefmarkensammlung.dto.CollectionDTO;
-import de.lm.mybriefmarkensammlung.repository.CategoryRepository;
+import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
+import de.lm.mybriefmarkensammlung.dto.response.CollectionDTO;
 import de.lm.mybriefmarkensammlung.repository.CollectionRepository;
-import de.lm.mybriefmarkensammlung.repository.ImageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -40,38 +36,34 @@ public class CollectionService {
     public CollectionDTO getCollection(Long id) {
         Collection collection = collectionRepository.findById(id).orElse(new Collection("Sammlung konnte nicht gefunden werden", -1L, "", new HashSet<>(), false, ""));
 
-        CollectionDTO collectionDTO = new CollectionDTO(collection.getId(),
-                                                        collection.getTitle(),
-                                                        categoryService.getCategoryList(collection.getCategoryId()),
-                                                        collection.getDescription(),
-                                                        collection.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
-                                                        collection.getExhibition(),
-                                                        collection.getExhibitionClass());
+        CollectionDTO collectionDTO = entityToDto(collection);
 
         return collectionDTO;
     }
 
-    public List<CollectionDTO> getCollections(Optional<String> title, Optional<Long> categoryId, Optional<Boolean> isExhibition, Optional<ExhibitionClass> exhibitionClass) {
-
+    public List<CollectionDTO> getCollections(CollectionSearchRequest searchRequest) {
         List<Collection> collections = collectionRepository.search(
-                title.orElse(null),
-                categoryId.isPresent() ? categoryService.getAllChildIds(categoryId.get()).toArray(new Long[0]) : null,
-                isExhibition.orElse(null),
-                exhibitionClass.isPresent() ? exhibitionClass.get().getDisplayName() : null
+                searchRequest.getTitle(),
+                searchRequest.getCategory() != null ? categoryService.getAllChildIds(searchRequest.getCategory()).toArray(new Long[0]) : null,
+                searchRequest.getExhibition(),
+                searchRequest.getExhibitionClass() != null ? searchRequest.getExhibitionClass().getDisplayName() : null
         );
 
         List<CollectionDTO> collectionDTOS = new ArrayList<>();
         for (Collection c : collections) {
-            CollectionDTO collectionDTO = new CollectionDTO(c.getId(),
-                                                            c.getTitle(),
-                                                            categoryService.getCategoryList(c.getCategoryId()),
-                                                            c.getDescription(),
-                                                            c.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
-                                                            c.getExhibition(),
-                                                            c.getExhibitionClass());
-            collectionDTOS.add(collectionDTO);
+            collectionDTOS.add(entityToDto(c));
         }
 
         return collectionDTOS;
+    }
+
+    private CollectionDTO entityToDto(Collection entity) {
+        return new CollectionDTO(   entity.getId(),
+                                    entity.getTitle(),
+                                    categoryService.getCategoryList(entity.getCategoryId()),
+                                    entity.getDescription(),
+                                    entity.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
+                                    entity.getExhibition(),
+                                    entity.getExhibitionClass());
     }
 }

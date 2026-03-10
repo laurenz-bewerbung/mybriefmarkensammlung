@@ -1,4 +1,4 @@
-package de.lm.mybriefmarkensammlung.dto;
+package de.lm.mybriefmarkensammlung.dto.response;
 
 import de.lm.mybriefmarkensammlung.domain.model.CollectionImage;
 

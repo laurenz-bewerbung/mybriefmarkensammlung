@@ -2,6 +2,7 @@ package de.lm.mybriefmarkensammlung.controller;
 
 import de.lm.mybriefmarkensammlung.domain.model.Category;
 import de.lm.mybriefmarkensammlung.domain.model.ExhibitionClass;
+import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
 import de.lm.mybriefmarkensammlung.service.CategoryService;
 import de.lm.mybriefmarkensammlung.service.CollectionService;
 import de.lm.mybriefmarkensammlung.service.ImageService;
@@ -33,13 +34,9 @@ public class CollectionController {
 
 
     @GetMapping("/sammlungen")
-    public String overview(Model model,
-                           @RequestParam("title") Optional<String> title,
-                           @RequestParam("category") Optional<Long> categoryId,
-                           @RequestParam("isExhibition") Optional<Boolean> isExhibition,
-                           @RequestParam("exhibitionClass") Optional<ExhibitionClass> exhibitionClass) {
+    public String overview(Model model, CollectionSearchRequest searchRequest) {
 
-        model.addAttribute("collections", collectionService.getCollections(title, categoryId, isExhibition, exhibitionClass));
+        model.addAttribute("collections", collectionService.getCollections(searchRequest));
         model.addAttribute("categories", categoryService.getCategoryTree());
         model.addAttribute("exhibitionClasses", ExhibitionClass.values());
         return "sammlungen/overview";

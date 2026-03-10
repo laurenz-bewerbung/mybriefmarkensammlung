@@ -1,8 +1,8 @@
 package de.lm.mybriefmarkensammlung.service;
 
 import de.lm.mybriefmarkensammlung.domain.model.Category;
-import de.lm.mybriefmarkensammlung.dto.CategoryDTO;
-import de.lm.mybriefmarkensammlung.dto.CategoryTreeDTO;
+import de.lm.mybriefmarkensammlung.dto.response.CategoryDTO;
+import de.lm.mybriefmarkensammlung.dto.response.CategoryTreeDTO;
 import de.lm.mybriefmarkensammlung.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package de.lm.mybriefmarkensammlung.dto;
+package de.lm.mybriefmarkensammlung.dto.response;
 
 import java.util.List;
 
