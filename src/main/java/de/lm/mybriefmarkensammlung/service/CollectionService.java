@@ -28,7 +28,6 @@ public class CollectionService {
     @Transactional
     public void addCollection(CollectionCreateRequest createRequest) throws IOException {
         System.out.println(createRequest.getIsExhibition());
-        System.out.println(createRequest.getExhibitionClass());
         Long[] imageIds = imageService.storeImages(createRequest.getImages());
 
         Set<CollectionImage> images = new HashSet<>();
@@ -54,11 +53,12 @@ public class CollectionService {
     }
 
     public List<CollectionDTO> getCollections(CollectionSearchRequest searchRequest) {
+        System.out.println(searchRequest.getExhibition());
         List<Collection> collections = collectionRepository.search(
                 searchRequest.getTitle(),
                 searchRequest.getCategory() != null ? categoryService.getAllChildIds(searchRequest.getCategory()).toArray(new Long[0]) : null,
                 searchRequest.getExhibition(),
-                searchRequest.getExhibitionClass() != null ? searchRequest.getExhibitionClass().getDisplayName() : null
+                searchRequest.getExhibitionClass() != null ? searchRequest.getExhibitionClass().name() : null
         );
 
         List<CollectionDTO> collectionDTOS = new ArrayList<>();
