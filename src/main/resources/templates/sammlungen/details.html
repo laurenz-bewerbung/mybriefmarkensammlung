@@ -18,16 +18,14 @@
             <div th:replace="~{categories/list :: displayPath(list=${collection.categoryList})}"></div>
         </div>
 
-        <h1 class="fw-bold display-5 mb-2" th:text="${collection.title}">Titel der Sammlung</h1>
+        <h1 class="fw-bold display-5 mb-2" th:text="${collection.title}">Titel</h1>
 
-        <div class="d-flex align-items-center flex-wrap gap-3">
-            <p class="lead text-muted mb-0" th:text="${collection.description}">Beschreibung...</p>
+        <div class="description-container mb-3">
+            <p class="description-text lead text-muted" th:text="${collection.description}">Beschreibung...</p>
+        </div>
 
-            <div th:if="${collection.isExhibition}">
-                <span class="badge bg-dark rounded-pill px-3 py-2">
-                    🏆 <span th:text="${collection.exhibitionClass}">Klasse</span>
-                </span>
-            </div>
+        <div th:if="${collection.isExhibition}">
+            Ausstellungsklasse: <span th:text="${collection.exhibitionClass}">Klasse</span>
         </div>
     </div>
 </header>

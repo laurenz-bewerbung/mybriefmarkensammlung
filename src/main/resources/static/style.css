@@ -146,3 +146,17 @@ body { background-color: #f4f7f6; margin: 0; padding: 0; overflow-x: hidden; }
 }
 
 .inline-form-container { margin-top: 0.5rem; width: 100%; }
+
+.description-container {
+    display: block; /* Sicherstellen, dass es kein Flex-Item ist */
+    width: 100%;
+}
+
+.description-text {
+    display: block;
+    word-wrap: break-word;       /* Altes CSS */
+    overflow-wrap: break-word;  /* Modernes CSS */
+    white-space: pre-wrap;      /* Behält Zeilenumbrüche aus der Datenbank bei */
+    word-break: break-word;     /* Erzwingt Umbruch auch bei extrem langen Wörtern */
+    line-height: 1.6;           /* Bessere Lesbarkeit bei Umbrüchen */
+}

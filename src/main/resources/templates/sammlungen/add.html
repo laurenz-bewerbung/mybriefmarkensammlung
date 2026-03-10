@@ -23,7 +23,7 @@
 
             <div class="card form-card shadow-sm">
                 <div class="card-body p-4 p-md-5">
-                    <h2 class="fw-bold mb-4">🆕 Neue Sammlung anlegen</h2>
+                    <h2 class="fw-bold mb-4">Sammlung hochladen</h2>
                     <hr class="mb-4 text-muted opacity-25">
 
                     <form th:action="@{/sammlungen/add}" method="POST" enctype="multipart/form-data" class="needs-validation">
@@ -31,8 +31,7 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <label for="title" class="form-label">Titel der Sammlung</label>
-                                <input type="text" id="title" name="title" class="form-control"
-                                       placeholder="z.B. Sondermarken 2024" required>
+                                <input type="text" id="title" name="title" class="form-control" required>
                             </div>
 
                             <div class="col-md-6">
@@ -44,13 +43,11 @@
                                 <label for="images" class="form-label">Bilder hochladen</label>
                                 <input type="file" id="images" name="images" class="form-control"
                                        accept="image/*" multiple>
-                                <div class="form-text" style="font-size: 0.75rem;">Halten Sie STRG gedrückt für mehrere Bilder.</div>
                             </div>
 
                             <div class="col-12">
-                                <label for="description" class="form-label">Beschreibung (optional)</label>
-                                <textarea id="description" name="description" class="form-control" rows="3"
-                                          placeholder="Details zur Erhaltung, Besonderheiten..."></textarea>
+                                <label for="description" class="form-label">Beschreibung</label>
+                                <textarea id="description" name="description" class="form-control" rows="4"></textarea>
                             </div>
 
                             <div class="col-12 mt-4">
@@ -72,7 +69,7 @@
 
                             <div class="col-12 mt-5">
                                 <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
-                                    💾 Sammlung speichern
+                                    Hochladen
                                 </button>
                             </div>
                         </div>
