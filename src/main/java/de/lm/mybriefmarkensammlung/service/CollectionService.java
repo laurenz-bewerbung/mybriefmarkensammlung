@@ -53,11 +53,11 @@ public class CollectionService {
     }
 
     public List<CollectionDTO> getCollections(CollectionSearchRequest searchRequest) {
-        System.out.println(searchRequest.getExhibition());
+        System.out.println(searchRequest.getIsExhibition());
         List<Collection> collections = collectionRepository.search(
                 searchRequest.getTitle(),
                 searchRequest.getCategory() != null ? categoryService.getAllChildIds(searchRequest.getCategory()).toArray(new Long[0]) : null,
-                searchRequest.getExhibition(),
+                searchRequest.getIsExhibition(),
                 searchRequest.getExhibitionClass() != null ? searchRequest.getExhibitionClass().name() : null
         );
 

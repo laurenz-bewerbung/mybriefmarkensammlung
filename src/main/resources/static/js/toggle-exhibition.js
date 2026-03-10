@@ -4,7 +4,6 @@ function toggleExhibition() {
     const select = document.querySelector('#exhibitionContainer select');
 
     container.hidden = !checkbox.checked;
-    select.required = checkbox.checked;
     if (!checkbox.checked) select.value = "";
 }
 // Initialer Check beim Laden

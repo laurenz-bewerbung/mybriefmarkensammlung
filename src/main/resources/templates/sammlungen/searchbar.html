@@ -10,20 +10,20 @@
         <div class="form-group">
             <label for="title" class="form-label small fw-bold text-secondary text-uppercase">Titel</label>
             <input type="text" id="title" name="title"
-                   th:value="${param.title}"
+                   th:value="${collectionSearchRequest?.title}"
                    class="form-control">
         </div>
 
         <div class="form-group">
             <label for="category" class="form-label small fw-bold text-secondary text-uppercase">Kategorie</label>
             <div id="category" class="custom-dropdown-wrapper"
-                 th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${currentParentId})}">
+                 th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${collectionSearchRequest?.category})}">
             </div>
         </div>
 
         <div class="form-check form-switch mt-2">
             <input class="form-check-input" type="checkbox" id="isExhibition"
-                   name="isExhibition" onchange="toggleExhibition()">
+                   name="isExhibition" onchange="toggleExhibition()" th:checked="${collectionSearchRequest?.isExhibition}">
             <label class="form-check-label small fw-bold" for="isExhibition">
                 Ausstellungs-Exponat
             </label>
@@ -32,7 +32,7 @@
         <div id="exhibitionContainer" class="p-2 border rounded bg-light" hidden>
             <label for="exhibitionClass" class="form-label small fw-bold">Klasse:</label>
             <div id="exhibitionClass"
-                 th:replace="~{sammlungen/exhibition-dropdown :: exhibitionDropdown(name='exhibitionClass', classes=${exhibitionClasses}, selectedClass=null)}">
+                 th:replace="~{sammlungen/exhibition-dropdown :: exhibitionDropdown(name='exhibitionClass', classes=${exhibitionClasses}, selectedClass=${collectionSearchRequest?.exhibitionClass})}">
             </div>
         </div>
 

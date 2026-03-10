@@ -25,12 +25,12 @@ public class CollectionSearchRequest {
         this.category = categoryId;
     }
 
-    public Boolean getExhibition() {
+    public Boolean getIsExhibition() {
         return isExhibition;
     }
 
-    public void setExhibition(Boolean exhibition) {
-        isExhibition = exhibition;
+    public void setIsExhibition(Boolean isExhibition) {
+        this.isExhibition = isExhibition;
     }
 
     public ExhibitionClass getExhibitionClass() {
