@@ -7,10 +7,12 @@ import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
 import de.lm.mybriefmarkensammlung.service.CategoryService;
 import de.lm.mybriefmarkensammlung.service.CollectionService;
 import de.lm.mybriefmarkensammlung.service.ImageService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +37,7 @@ public class CollectionController {
 
 
     @GetMapping("/sammlungen")
-    public String overview(Model model, CollectionSearchRequest searchRequest) {
+    public String overview(Model model, @Valid CollectionSearchRequest searchRequest) {
 
         model.addAttribute("collections", collectionService.getCollections(searchRequest));
         model.addAttribute("categories", categoryService.getCategoryTree());
@@ -57,7 +59,11 @@ public class CollectionController {
     }
 
     @PostMapping("/sammlungen/add")
-    public String add_form(CollectionCreateRequest createRequest) throws IOException {
+    public String add_form(@Valid CollectionCreateRequest createRequest, BindingResult bindingResult) throws IOException {
+        if(bindingResult.hasErrors()) {
+            return "sammlungen/add";
+        }
+
         collectionService.addCollection(createRequest);
         return "redirect:/sammlungen";
     }
