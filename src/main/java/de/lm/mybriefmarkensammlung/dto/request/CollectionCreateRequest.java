@@ -1,6 +1,8 @@
 package de.lm.mybriefmarkensammlung.dto.request;
 
 import de.lm.mybriefmarkensammlung.domain.model.ExhibitionClass;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.constraints.NotBlank;
 
@@ -8,9 +10,9 @@ public class CollectionCreateRequest {
 
     @NotBlank(message = "Gebe einen Titel an.")
     private String title;
-    @NotBlank(message = "Wähle eine Kategorie aus.")
+    @NotNull(message = "Wähle eine Kategorie aus.")
     private Long category;
-    @NotBlank(message = "Lade mindestens ein Bild hoch.")
+    @NotEmpty(message = "Lade mindestens ein Bild hoch.")
     private MultipartFile[] images;
 
     private String description;

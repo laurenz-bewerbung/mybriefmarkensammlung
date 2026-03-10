@@ -1,28 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <body>
 
-<div th:fragment="searchBar" class="search-container">
+<div th:fragment="searchBar" class="search-sidebar-wrapper">
     <script th:src="@{/js/toggle-exhibition.js}" defer></script>
-    <form th:action="@{/sammlungen}" method="GET" class="search-form">
 
-        <label for="title">Titel</label>
-        <input type="text" id="title" name="title" th:value="${param.title}">
+    <form th:action="@{/sammlungen}" method="GET" class="d-flex flex-column gap-3">
 
-        <label for="category">Kategorie</label>
-        <div id="category" th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${currentParentId})}"></div>
-
-        <label for="isExhibition">Offizielles Ausstellungs-Exponat?</label>
-        <input type="checkbox" id="isExhibition" name="isExhibition" onchange="toggleExhibition()">
-
-        <div id="exhibitionContainer" hidden>
-            <label for="exhibitionClass">Ausstellungsklasse:</label>
-            <div id="exhibitionClass" th:replace="~{sammlungen/exhibition-dropdown :: exhibitionDropdown(name='exhibitionClass', classes=${exhibitionClasses}, selectedClass=null)}"> </div>
+        <div class="form-group">
+            <label for="title" class="form-label small fw-bold text-secondary text-uppercase">Titel</label>
+            <input type="text" id="title" name="title"
+                   th:value="${param.title}"
+                   class="form-control"
+                   placeholder="z.B. Deutsches Reich...">
         </div>
 
-        <button type="submit">Suchen</button>
-        <a th:href="@{/sammlungen}" class="btn-reset">Reset</a>
+        <div class="form-group">
+            <label for="category" class="form-label small fw-bold text-secondary text-uppercase">Kategorie</label>
+            <div id="category" class="custom-dropdown-wrapper"
+                 th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${currentParentId})}">
+            </div>
+        </div>
+
+        <div class="form-check form-switch mt-2">
+            <input class="form-check-input" type="checkbox" id="isExhibition"
+                   name="isExhibition" onchange="toggleExhibition()">
+            <label class="form-check-label small fw-bold" for="isExhibition">
+                Ausstellungs-Exponat
+            </label>
+        </div>
+
+        <div id="exhibitionContainer" class="p-2 border rounded bg-light" hidden>
+            <label for="exhibitionClass" class="form-label small fw-bold">Klasse:</label>
+            <div id="exhibitionClass"
+                 th:replace="~{sammlungen/exhibition-dropdown :: exhibitionDropdown(name='exhibitionClass', classes=${exhibitionClasses}, selectedClass=null)}">
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 mt-3">
+            <button type="submit" class="btn btn-primary shadow-sm">
+                🔍 Ergebnisse filtern
+            </button>
+            <a th:href="@{/sammlungen}" class="btn btn-outline-secondary btn-sm">
+                Auswahl zurücksetzen
+            </a>
+        </div>
     </form>
 </div>
 

@@ -1,78 +1,115 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Briefmarken Sammlungen</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
-        body {
-            background-color: #f8f9fa;
+        body { background-color: #f4f7f6; margin: 0; padding: 0; overflow-x: hidden; }
+
+        .sidebar-search {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .card { transition: transform 0.2s; border: none; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); }
+
+        /* A4 Format erzwingen (Breite zu Höhe 1 : 1.41) */
+        .stamp-img-container {
+            width: 100%;
+            aspect-ratio: 1 / 1.41; /* A4 Ratio */
+            overflow: hidden;
+            border-radius: 6px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .stamp-img {
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Füllt das A4 Feld komplett aus */
         }
 
-        .page-header {
-            margin-top: 40px;
-            margin-bottom: 30px;
+        /* Container für die Klasse mit fester Höhe, damit Karten gleich groß bleiben */
+        .exhibition-info-area {
+            min-height: 45px; /* Höhe eines Badges inkl. Margin */
+            margin-top: 10px;
+        }
+
+        .collection-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            min-height: 2.8em; /* Platz für 2 Zeilen Titel */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+<div th:replace="~{header :: main-header}"></div>
 
-    <div class="page-header text-center">
-        <h1 class="fw-bold">📬 Briefmarken Sammlungen</h1>
-        <p class="text-muted">Hier können Sie Sammlungen betrachten</p>
+<main class="container-fluid px-4 my-5">
+    <div class="row">
 
-        <a href="/sammlungen/add" class="btn btn-primary mt-2">
-            + Neue Sammlung hinzufügen
-        </a>
-    </div>
+        <aside class="col-lg-3 col-md-4 mb-4">
+            <div class="sidebar-search shadow-sm">
+                <h5 class="fw-bold mb-3">🔍 Filter & Suche</h5>
+                <div th:replace="~{sammlungen/searchbar :: searchBar}"></div>
+                <hr class="my-4">
+                <a href="/sammlungen/add" class="btn btn-primary w-100 mb-2">+ Neue Sammlung</a>
+            </div>
+        </aside>
 
-    <div th:replace="~{sammlungen/searchbar :: searchBar}"></div>
+        <div class="col-lg-9 col-md-8">
+            <div class="row g-3">
+                <div class="col-xl-4 col-md-6" th:each="collection : ${collections}">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body d-flex flex-column">
 
-    <div class="row g-4">
+                            <div class="text-primary small fw-bold text-uppercase mb-1">
+                                <div th:replace="~{categories/list :: displayPath(list=${collection.categoryList})}"></div>
+                            </div>
 
-        <div class="col-md-6 col-lg-4" th:each="collection : ${collections}">
-            <div class="card shadow-sm h-100">
+                            <h5 class="collection-title text-dark" th:text="${collection.title}">Titel</h5>
 
-                <div class="card-body">
-                    <div class="breadcrumb-container">
-                        <div th:replace="~{categories/list :: displayPath(list=${collection.categoryList})}"></div>
-                    </div>
-                    <p class="card-text text-muted" th:text="${collection.title}"></p>
+                            <div class="my-3">
+                                <a th:href="@{/sammlungen/{id}(id=${collection.id})}" class="stamp-img-container shadow-sm">
+                                    <img th:if="${collection.images != null && collection.images.size() > 0}"
+                                         class="stamp-img"
+                                         th:src="@{/image/{id}(id=${collection.images[0].imageId})}">
+                                    <span th:unless="${collection.images != null && collection.images.size() > 0}" class="text-muted small">Kein Bild</span>
+                                </a>
+                            </div>
 
-                    <div class="row" th:if="${collection.images.size() > 0}">
-                        <div class="col-12 mb-2">
+                            <div class="exhibition-info-area">
+                                <div th:if="${collection.isExhibition}">
+                                    <span class="badge bg-light text-dark border rounded-pill py-2 px-3 w-100">
+                                        🏆 <span th:text="${collection.exhibitionClass}">Klasse</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
 
-                            <a th:href="@{/sammlungen/{id}(id=${collection.id})}">
-                                <img class="img-fluid stamp-img"
-                                     th:src="@{/image/{id}(id=${collection.images[0].imageId})}">
-                            </a>
-
+                        <div class="card-footer bg-transparent border-0 pb-3 mt-auto">
+                            <a th:href="@{/sammlungen/{id}(id=${collection.id})}" class="btn btn-sm btn-outline-secondary w-100">Details</a>
                         </div>
                     </div>
-
-                    <p th:if="${collection.isExhibition}">
-                        Ausstellungsklasse: <span class="card-text text-muted" th:text="${collection.exhibitionClass}"></span>
-                    </p>
-
                 </div>
-
             </div>
         </div>
-
     </div>
+</main>
 
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

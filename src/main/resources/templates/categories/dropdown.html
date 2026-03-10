@@ -3,7 +3,7 @@
 <body>
 
 <div th:fragment="dropdown(name, selectedId)">
-    <select th:name="${name}" th:id="${name}">
+    <select th:name="${name}" th:id="${name}" class="form-select form-select-sm shadow-sm border-secondary-subtle">
         <option value="">-- Keine (Hauptkategorie) --</option>
         <th:block th:insert="~{::recursiveOpts(nodes=${categories}, indent='')}"></th:block>
     </select>

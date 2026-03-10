@@ -2,15 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="exhibitionDropdown(name, classes, selectedClass)">
-    <select th:name="${name}" th:id="${name}">
-        <option value="">-- Bitte wählen --</option>
+<div th:fragment="exhibitionDropdown(name, classes, selectedClass)" class="mb-2">
+    <select th:name="${name}"
+            th:id="${name}"
+            class="form-select form-select-sm shadow-sm border-secondary-subtle">
+
+        <option value="" th:selected="${selectedClass == null}">
+            -- Bitte wählen --
+        </option>
+
         <option th:each="exClass : ${classes}"
                 th:value="${exClass}"
                 th:text="${exClass.displayName}"
                 th:selected="${exClass == selectedClass}">
         </option>
     </select>
+
+    <div class="form-text mt-1" style="font-size: 0.7rem;">
+        Wählen Sie die offizielle Wettbewerbsklasse.
+    </div>
 </div>
 
 </body>

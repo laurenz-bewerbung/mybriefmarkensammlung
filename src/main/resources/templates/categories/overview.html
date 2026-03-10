@@ -1,36 +1,129 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <title>Kategorien verwalten - MyBS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script th:src="@{/js/category-tree.js}" defer></script>
+    <style>
+        body { background-color: #f4f7f6; margin: 0; padding: 0; }
+        .category-tree-container { background: white; border-radius: 12px; padding: 2rem; }
+
+        .tree-group {
+            list-style: none;
+            padding-left: 1.5rem;
+            border-left: 1px dashed #dee2e6;
+            margin-top: 0.5rem;
+        }
+        .category-tree-container > .tree-group { padding-left: 0; border-left: none; }
+        .category-node { margin-bottom: 0.75rem; position: relative; }
+
+        .category-content {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .category-content:hover { background: #e9ecef; box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important; }
+
+        .category-name { font-weight: 500; color: #212529; flex-grow: 1; }
+
+        /* Plus-Button Design */
+        .btn-add {
+            border: none;
+            background: #0d6efd;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+        .btn-add:hover { background: #0a58ca; transform: scale(1.1); }
+
+        /* Spezielles Styling für den "Neue Hauptkategorie" Platzhalter */
+        .main-add-node {
+            border: 2px dashed #dee2e6;
+            background: transparent;
+            cursor: pointer;
+            color: #6c757d;
+        }
+        .main-add-node:hover {
+            border-color: #0d6efd;
+            color: #0d6efd;
+            background: #f0f7ff;
+        }
+
+        .inline-form-container { margin-top: 0.5rem; width: 100%; }
+    </style>
 </head>
 
-<div class="category-tree-container">
-    <h2>Kategorien</h2>
+<body>
 
-    <ul th:if="${categories != null}"
-        th:replace="~{::categoryTree(nodes=${categories})}">
-    </ul>
+<div th:replace="~{header :: main-header}"></div>
 
-    <p th:if="${categories == null || categories.isEmpty()}">Keine Kategorien vorhanden.</p>
-</div>
+<main class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="category-tree-container shadow-sm">
+                <h2 class="fw-bold mb-4">📂 Kategorien verwalten</h2>
+
+                <ul th:if="${categories != null && !categories.isEmpty()}"
+                    th:replace="~{::categoryTree(nodes=${categories})}"
+                    class="tree-group">
+                </ul>
+
+                <div class="tree-group">
+                    <div class="category-node">
+                        <div class="category-content main-add-node" onclick="showInlineForm(null)">
+                            <span class="category-name text-center">
+                                <i class="bi bi-plus-lg me-2"></i> Neue Hauptkategorie hinzufügen
+                            </span>
+                        </div>
+                        <div id="form-container-null" class="inline-form-container"></div>
+                    </div>
+                </div>
+
+                <div th:if="${categories == null || categories.isEmpty()}" class="text-center py-4 text-muted">
+                    <small>Noch keine Kategorien angelegt.</small>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
 
 <ul th:fragment="categoryTree(nodes)" class="tree-group">
     <li th:each="node : ${nodes}" th:id="'node-' + ${node.category.id}" class="category-node">
-        <div class="category-content">
-            <span class="category-name" th:text="${node.category.name}">Kategorie</span>
 
-            <button type="button" class="btn-add" th:onclick="'showInlineForm(' + ${node.category.id} + ')'">+</button>
-            <div th:id="'form-container-' + ${node.category.id}" class="inline-form-container"></div>
+        <div class="category-content border shadow-sm">
+            <a th:href="@{/sammlungen(category=${node.category.id})}"
+               class="category-link d-flex align-items-center flex-grow-1 text-decoration-none text-dark">
+                <i class="bi bi-folder2-open me-2 text-primary"></i>
+                <span class="category-name" th:text="${node.category.name}">Kategorie</span>
+            </a>
+
+            <button type="button" class="btn-add ms-2"
+                    th:onclick="'event.stopPropagation(); showInlineForm(' + ${node.category.id} + ')'">
+                +
+            </button>
         </div>
 
-        <ul class="children-container" th:if="${!node.children.isEmpty()}">
+        <div th:id="'form-container-' + ${node.category.id}" class="inline-form-container"></div>
+
+        <div class="children-container" th:if="${!node.children.isEmpty()}">
             <div th:replace="~{::categoryTree(nodes=${node.children})}"></div>
-        </ul>
-    </li>
-</ul>
-<ul class="tree-group">
-    <li id="node-1" class="category-node">
-        <div class="category-content">
-            <button type="button" class="btn-add" th:onclick="'showInlineForm(1)'">+</button>
-            <div id="form-container-1" class="inline-form-container"></div>
         </div>
     </li>
 </ul>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
