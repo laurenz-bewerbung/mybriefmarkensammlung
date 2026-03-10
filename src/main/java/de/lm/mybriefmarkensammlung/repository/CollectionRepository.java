@@ -11,7 +11,7 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
 
     @Query("""
         SELECT * FROM collection 
-        WHERE (:title IS NULL OR title LIKE CONCAT('%', CAST(:title AS TEXT), '%'))
+        WHERE (:title IS NULL OR title ILIKE CONCAT('%', CAST(:title AS TEXT), '%'))
           AND (CAST(:categoryIds AS BIGINT[]) IS NULL OR category_id = ANY(CAST(:categoryIds AS BIGINT[])))
           AND (:isExhibition IS NULL OR is_exhibition = :isExhibition)
           AND (:exClass IS NULL OR exhibition_class = :exClass)
