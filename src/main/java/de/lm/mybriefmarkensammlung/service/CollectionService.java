@@ -2,12 +2,14 @@ package de.lm.mybriefmarkensammlung.service;
 
 import de.lm.mybriefmarkensammlung.domain.model.*;
 import de.lm.mybriefmarkensammlung.domain.model.Collection;
+import de.lm.mybriefmarkensammlung.dto.request.CollectionCreateRequest;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
 import de.lm.mybriefmarkensammlung.dto.response.CollectionDTO;
 import de.lm.mybriefmarkensammlung.repository.CollectionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -15,21 +17,31 @@ public class CollectionService {
 
     private CollectionRepository collectionRepository;
     private CategoryService categoryService;
+    private ImageService imageService;
 
-    public CollectionService(CollectionRepository collectionRepository, CategoryService categoryService) {
+    public CollectionService(CollectionRepository collectionRepository, CategoryService categoryService, ImageService imageService) {
         this. collectionRepository = collectionRepository;
         this.categoryService = categoryService;
+        this.imageService = imageService;
     }
 
     @Transactional
-    public void addCollection(String title, Long categoryId, Long[] imageIds, String description, Boolean isExhibition, Optional<ExhibitionClass> exhibitionClass) {
+    public void addCollection(CollectionCreateRequest createRequest) throws IOException {
+        System.out.println(createRequest.getIsExhibition());
+        System.out.println(createRequest.getExhibitionClass());
+        Long[] imageIds = imageService.storeImages(createRequest.getImages());
 
         Set<CollectionImage> images = new HashSet<>();
         for(int i = 0; i < imageIds.length; i++) {
             images.add(new CollectionImage(imageIds[i], i));
         }
 
-        Collection collection = new Collection(title, categoryId, description, images, isExhibition, exhibitionClass.isPresent() ? exhibitionClass.get().getDisplayName() : null);
+        Collection collection = new Collection( createRequest.getTitle(),
+                                                createRequest.getCategory(),
+                                                createRequest.getDescription(),
+                                                images,
+                                                createRequest.getIsExhibition(),
+                                                createRequest.getExhibitionClass() != null ? createRequest.getExhibitionClass().name() : null);
         collectionRepository.save(collection);
     }
 
@@ -64,6 +76,6 @@ public class CollectionService {
                                     entity.getDescription(),
                                     entity.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
                                     entity.getExhibition(),
-                                    entity.getExhibitionClass());
+                                    entity.getExhibition() ? ExhibitionClass.valueOf(entity.getExhibitionClass()).getDisplayName() : null);
     }
 }

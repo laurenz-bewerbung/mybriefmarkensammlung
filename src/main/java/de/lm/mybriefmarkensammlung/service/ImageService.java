@@ -17,6 +17,14 @@ public class ImageService {
         this.imageRepository = imageRepository;
     }
 
+    public Long[] storeImages(MultipartFile[] files) throws IOException {
+        Long[] ids = new Long[files.length];
+        for(int i = 0; i < files.length; i++) {
+            ids[i] = storeImage(files[i]);
+        }
+        return ids;
+    }
+
     public Long storeImage(MultipartFile file) throws IOException {
         Image image = new Image(file.getOriginalFilename(), file.getBytes(), 0);
         image = imageRepository.save(image);

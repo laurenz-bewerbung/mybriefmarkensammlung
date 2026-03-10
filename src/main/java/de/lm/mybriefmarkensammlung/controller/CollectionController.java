@@ -2,6 +2,7 @@ package de.lm.mybriefmarkensammlung.controller;
 
 import de.lm.mybriefmarkensammlung.domain.model.Category;
 import de.lm.mybriefmarkensammlung.domain.model.ExhibitionClass;
+import de.lm.mybriefmarkensammlung.dto.request.CollectionCreateRequest;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
 import de.lm.mybriefmarkensammlung.service.CategoryService;
 import de.lm.mybriefmarkensammlung.service.CollectionService;
@@ -56,21 +57,8 @@ public class CollectionController {
     }
 
     @PostMapping("/sammlungen/add")
-    public String add_form(@RequestParam("title") String title,
-                           @RequestParam("category") Long categoryId,
-                           @RequestParam("images") MultipartFile[] images,
-                           @RequestParam("description") String description,
-                           @RequestParam(value = "isExhibition", defaultValue = "false") boolean isExhibition,
-                           @RequestParam("exhibitionClass") Optional<ExhibitionClass> exhibitionClass) throws IOException {
-
-        Long[] imageIds = new Long[images.length];
-        for(int i = 0; i < images.length; i++) {
-            Long id = imageService.storeImage(images[i]);
-            imageIds[i] = id;
-        }
-
-        collectionService.addCollection(title, categoryId, imageIds, description, isExhibition, exhibitionClass);
-
+    public String add_form(CollectionCreateRequest createRequest) throws IOException {
+        collectionService.addCollection(createRequest);
         return "redirect:/sammlungen";
     }
 }
