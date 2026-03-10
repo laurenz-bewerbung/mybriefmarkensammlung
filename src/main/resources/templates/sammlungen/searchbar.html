@@ -11,8 +11,7 @@
             <label for="title" class="form-label small fw-bold text-secondary text-uppercase">Titel</label>
             <input type="text" id="title" name="title"
                    th:value="${param.title}"
-                   class="form-control"
-                   placeholder="z.B. Deutsches Reich...">
+                   class="form-control">
         </div>
 
         <div class="form-group">
@@ -39,7 +38,7 @@
 
         <div class="d-grid gap-2 mt-3">
             <button type="submit" class="btn btn-primary shadow-sm">
-                🔍 Ergebnisse filtern
+                Suchen
             </button>
             <a th:href="@{/sammlungen}" class="btn btn-outline-secondary btn-sm">
                 Auswahl zurücksetzen

@@ -4,56 +4,8 @@
     <meta charset="UTF-8">
     <title>Briefmarken Sammlungen</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f4f7f6; margin: 0; padding: 0; overflow-x: hidden; }
-
-        .sidebar-search {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            position: sticky;
-            top: 20px;
-        }
-
-        .card { transition: transform 0.2s; border: none; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); }
-
-        /* A4 Format erzwingen (Breite zu Höhe 1 : 1.41) */
-        .stamp-img-container {
-            width: 100%;
-            aspect-ratio: 1 / 1.41; /* A4 Ratio */
-            overflow: hidden;
-            border-radius: 6px;
-            background-color: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .stamp-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Füllt das A4 Feld komplett aus */
-        }
-
-        /* Container für die Klasse mit fester Höhe, damit Karten gleich groß bleiben */
-        .exhibition-info-area {
-            min-height: 45px; /* Höhe eines Badges inkl. Margin */
-            margin-top: 10px;
-        }
-
-        .collection-title {
-            font-size: 1.15rem;
-            font-weight: 600;
-            min-height: 2.8em; /* Platz für 2 Zeilen Titel */
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
-
 <body>
 
 <div th:replace="~{header :: main-header}"></div>
@@ -63,7 +15,7 @@
 
         <aside class="col-lg-3 col-md-4 mb-4">
             <div class="sidebar-search shadow-sm">
-                <h5 class="fw-bold mb-3">🔍 Filter & Suche</h5>
+                <h5 class="fw-bold mb-3">Suche</h5>
                 <div th:replace="~{sammlungen/searchbar :: searchBar}"></div>
                 <hr class="my-4">
                 <a href="/sammlungen/add" class="btn btn-primary w-100 mb-2">+ Neue Sammlung</a>
@@ -94,7 +46,7 @@
                             <div class="exhibition-info-area">
                                 <div th:if="${collection.isExhibition}">
                                     <span class="badge bg-light text-dark border rounded-pill py-2 px-3 w-100">
-                                        🏆 <span th:text="${collection.exhibitionClass}">Klasse</span>
+                                        Ausstellungsklasse: <span th:text="${collection.exhibitionClass}">Klasse</span>
                                     </span>
                                 </div>
                             </div>

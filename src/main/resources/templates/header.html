@@ -1,36 +1,13 @@
 <header th:fragment="main-header" class="w-100">
-    <style>
-        /* Erzwingt, dass der Header und seine Container keinerlei Abstände haben */
-        .full-width-header {
-            width: 100vw;
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
-        }
-        .no-gutter > [class*='col-'] {
-            padding-right: 0;
-            padding-left: 0;
-        }
-    </style>
-
     <div class="full-width-header">
         <div class="container-fluid p-0">
-            <div class="row g-0 no-gutter"> <div class="col-6">
-                <img th:src="@{/images/banner1.png}"
-                     alt="Banner Links"
-                     class="w-100 d-block"
-                     style="height: 300px; object-fit: cover; object-position: right;">
-            </div>
-
+            <div class="row g-0 no-gutter">
                 <div class="col-6">
-                    <img th:src="@{/images/banner1.png}"
-                         alt="Banner Rechts"
-                         class="w-100 d-block"
-                         style="height: 300px; object-fit: cover; object-position: left; filter: brightness(1.05);">
+                    <img th:src="@{/images/banner1.png}" alt="Banner Links" class="w-100 d-block" style="height: 300px; object-fit: cover; object-position: right;">
                 </div>
-
+                <div class="col-6">
+                    <img th:src="@{/images/banner1.png}" alt="Banner Rechts" class="w-100 d-block" style="height: 300px; object-fit: cover; object-position: left; filter: brightness(1.05);">
+                </div>
             </div>
         </div>
 
