@@ -45,13 +45,13 @@ public class CategoryService {
                 }
             }
         }
-        return roots.get(0).children();
+        return roots;//.get(0).children();
     }
 
     public List<CategoryDTO> getCategoryList(Long categoryId) {
 
         List<CategoryDTO> categoryList = new ArrayList<>();
-        while(categoryId != 1) {
+        while(categoryId != null) {
             Category currentHead = categoryRepository.findById(categoryId).orElseThrow();
             categoryList.addFirst(new CategoryDTO(currentHead.getId(), currentHead.getCategory()));
             categoryId = currentHead.getParentId();
