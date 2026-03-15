@@ -46,31 +46,62 @@ async function submitCategory(parentId) {
     }
 }
 
-function appendCategoryToDom(parentId, category) {
-    // Finde den Container der Kinder des aktuellen Knotens
-    const parentLi = document.getElementById(`node-${parentId}`);
-    let childrenUl = parentLi.querySelector('.children-container');
+function appendCategoryToDom(parentId, responseData) {
+    const categoryName = responseData.category;
+    const categoryId = responseData.id;
 
-    // Falls noch kein <ul> für Kinder existiert, erstelle eines
-    if (!childrenUl) {
-        childrenUl = document.createElement('ul');
-        childrenUl.className = 'children-container';
-        parentLi.appendChild(childrenUl);
+    let targetContainer;
+
+    if (parentId) {
+        // 1. Finde das li-Element des Elternknotens
+        const parentLi = document.getElementById(`node-${parentId}`);
+        if (!parentLi) return;
+
+        // 2. Suche den children-container (der jetzt dank HTML-Fix immer da ist)
+        targetContainer = parentLi.querySelector(':scope > .children-container');
+    } else {
+        // Hauptkategorie: Die oberste Liste im Dokument
+        targetContainer = document.querySelector('.category-tree-container');
     }
 
-    // Füge das neue Element hinzu (vereinfachtes Template)
+    // 3. Jede Ebene braucht eine <ul> mit der Klasse 'tree-group'
+    // Wenn noch keine Unterkategorien da waren, existiert diese <ul> noch nicht
+    let targetUl = targetContainer.querySelector(':scope > .tree-group');
+
+    if (!targetUl) {
+        targetUl = document.createElement('ul');
+        targetUl.className = 'tree-group';
+        targetContainer.appendChild(targetUl);
+    }
+
+    // 4. Das neue li-Element bauen (Exakt wie dein Thymeleaf-Fragment)
     const newLi = document.createElement('li');
-    newLi.id = `node-${category.id}`;
+    newLi.id = `node-${categoryId}`;
     newLi.className = 'category-node';
     newLi.innerHTML = `
-        <div class="category-content">
-            <span class="category-name">${category.name}</span>
-            <button type="button" onclick="showInlineForm(${category.id})">+</button>
-            <div id="form-container-${category.id}"></div>
+        <div class="category-content border shadow-sm">
+            <a href="/sammlungen?category=${categoryId}"
+               class="category-link d-flex align-items-center flex-grow-1 text-decoration-none text-dark">
+                <i class="bi bi-folder2-open me-2 text-primary"></i>
+                <span class="category-name">${categoryName}</span>
+            </a>
+            <button type="button" class="btn-add ms-2"
+                    onclick="event.stopPropagation(); showInlineForm(${categoryId})">
+                +
+            </button>
         </div>
-        <ul class="children-container"></ul>
+        <div id="form-container-${categoryId}" class="inline-form-container"></div>
+        <div class="children-container"></div>
     `;
-    childrenUl.appendChild(newLi);
+
+    // 5. In die Liste einfügen
+    targetUl.appendChild(newLi);
+
+    // Cleanup für leere Zustände
+    if (!parentId) {
+        const emptyMsg = document.querySelector('.text-center.text-muted');
+        if (emptyMsg) emptyMsg.remove();
+    }
 }
 
 function cancelForm(parentId) {

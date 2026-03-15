@@ -17,7 +17,7 @@
         <div class="col-lg-10">
 
             <div class="category-tree-container shadow-sm">
-                <h2 class="fw-bold mb-4">📂 Kategorien verwalten</h2>
+                <h2 class="fw-bold mb-4">Kategorien</h2>
 
                 <ul th:if="${categories != null && !categories.isEmpty()}"
                     th:replace="~{::categoryTree(nodes=${categories})}"
@@ -62,8 +62,10 @@
 
         <div th:id="'form-container-' + ${node.category.id}" class="inline-form-container"></div>
 
-        <div class="children-container" th:if="${!node.children.isEmpty()}">
-            <div th:replace="~{::categoryTree(nodes=${node.children})}"></div>
+        <div class="children-container">
+            <div th:if="${!node.children.isEmpty()}"
+                 th:replace="~{::categoryTree(nodes=${node.children})}">
+            </div>
         </div>
     </li>
 </ul>
