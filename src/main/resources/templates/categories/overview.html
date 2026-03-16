@@ -6,7 +6,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/style.css}">
-    <script th:src="@{/js/category-tree.js}" defer></script>
 </head>
 <body>
 
@@ -24,14 +23,23 @@
                     class="tree-group">
                 </ul>
 
-                <div class="tree-group">
+                <div class="tree-group mt-4">
                     <div class="category-node">
-                        <div class="category-content main-add-node" onclick="showInlineForm(null)">
-                            <span class="category-name text-center">
-                                <i class="bi bi-plus-lg me-2"></i> Neue Hauptkategorie hinzufügen
-                            </span>
-                        </div>
-                        <div id="form-container-null" class="inline-form-container"></div>
+                        <details class="main-add-details">
+                            <summary class="category-content main-add-node border shadow-sm p-3 text-center" style="list-style: none; cursor: pointer;">
+                <span class="category-name">
+                    <i class="bi bi-plus-lg me-2"></i> Neue Hauptkategorie hinzufügen
+                </span>
+                            </summary>
+
+                            <div class="mt-2 p-3 border rounded bg-light shadow-sm">
+                                <form th:action="@{/categories}" method="post" class="d-flex gap-2">
+                                    <input type="text" name="category" placeholder="Name der Hauptkategorie..."
+                                           class="form-control" required autofocus />
+                                    <button type="submit" class="btn btn-success">Erstellen</button>
+                                </form>
+                            </div>
+                        </details>
                     </div>
                 </div>
 
@@ -45,27 +53,31 @@
 </main>
 
 <ul th:fragment="categoryTree(nodes)" class="tree-group">
-    <li th:each="node : ${nodes}" th:id="'node-' + ${node.category.id}" class="category-node">
-
-        <div class="category-content border shadow-sm">
-            <a th:href="@{/sammlungen(category=${node.category.id})}"
-               class="category-link d-flex align-items-center flex-grow-1 text-decoration-none text-dark">
-                <i class="bi bi-folder2-open me-2 text-primary"></i>
-                <span class="category-name" th:text="${node.category.name}">Kategorie</span>
+    <li th:each="node : ${nodes}" class="category-node list-group-item border-0">
+        <div class="d-flex align-items-center gap-2">
+            <a th:href="@{/sammlungen(category=${node.category.id})}" class="text-decoration-none">
+                <i class="bi bi-folder2"></i>
+                <span th:text="${node.category.name}">Kategorie</span>
             </a>
 
-            <button type="button" class="btn-add ms-2"
-                    th:onclick="'event.stopPropagation(); showInlineForm(' + ${node.category.id} + ')'">
-                +
-            </button>
+            <details class="d-inline">
+                <summary class="btn btn-sm btn-light py-0 px-1" style="list-style: none; cursor: pointer;">
+                    <i class="bi bi-plus-lg"></i>
+                </summary>
+
+                <div class="mt-2 p-2 border rounded bg-white shadow-sm" style="position: absolute; z-index: 100;">
+                    <form th:action="@{/categories}" method="post" class="d-flex gap-2">
+                        <input type="hidden" name="parentId" th:value="${node.category.id}" />
+                        <input type="text" name="category" placeholder="Neue Unterkategorie"
+                               class="form-control form-control-sm" required autofocus />
+                        <button type="submit" class="btn btn-sm btn-success">OK</button>
+                    </form>
+                </div>
+            </details>
         </div>
 
-        <div th:id="'form-container-' + ${node.category.id}" class="inline-form-container"></div>
-
-        <div class="children-container">
-            <div th:if="${!node.children.isEmpty()}"
-                 th:replace="~{::categoryTree(nodes=${node.children})}">
-            </div>
+        <div class="ms-4 mt-2" th:if="${!node.children.isEmpty()}">
+            <ul th:replace="~{::categoryTree(nodes=${node.children})}"></ul>
         </div>
     </li>
 </ul>

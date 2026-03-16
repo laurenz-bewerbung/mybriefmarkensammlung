@@ -26,12 +26,11 @@ public class CategoryController {
     }
 
     @PostMapping("/categories")
-    @ResponseBody
-    public ResponseEntity<Category> addCategoryApi(
+    public String addCategory(
             @RequestParam("category") String name,
             @RequestParam(value = "parentId", required = false) Long parentId) {
 
-        Category newCat = categoryService.addCategory(name, parentId);
-        return ResponseEntity.ok(newCat);
+        categoryService.addCategory(name, parentId);
+        return "redirect:/categories";
     }
 }
