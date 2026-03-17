@@ -5,6 +5,7 @@ import de.lm.mybriefmarkensammlung.domain.model.User;
 import de.lm.mybriefmarkensammlung.dto.request.RegistrationRequest;
 import de.lm.mybriefmarkensammlung.exception.NoSuchRoleException;
 import de.lm.mybriefmarkensammlung.exception.NoSuchUserException;
+import de.lm.mybriefmarkensammlung.exception.UserAlreadyExistsException;
 import de.lm.mybriefmarkensammlung.repository.RoleRepository;
 import de.lm.mybriefmarkensammlung.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,8 +43,11 @@ public class UserService implements UserDetailsService {
     }
 
     public void registerUser(RegistrationRequest registrationRequest) {
-        Role role = roleRepository.findByAuthority("ROLE_USER").orElseGet(() ->roleRepository.save(new Role("ROLE_USER")));
+        if (userRepository.findByUsername(registrationRequest.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException(registrationRequest.getUsername());
+        }
 
+        Role role = roleRepository.findByAuthority("ROLE_USER").orElseGet(() ->roleRepository.save(new Role("ROLE_USER")));
         User user = new User(registrationRequest.getUsername(), passwordEncoder.encode(registrationRequest.getPassword()), role.getId());
         userRepository.save(user);
     }

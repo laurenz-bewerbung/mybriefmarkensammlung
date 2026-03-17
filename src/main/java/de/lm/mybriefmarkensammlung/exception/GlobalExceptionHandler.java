@@ -36,4 +36,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error/404";
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public String handleUserAlreadyExists(UserAlreadyExistsException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "users/register";
+    }
 }
