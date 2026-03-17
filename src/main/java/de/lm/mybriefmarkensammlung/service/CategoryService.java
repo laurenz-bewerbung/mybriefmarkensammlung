@@ -3,6 +3,7 @@ package de.lm.mybriefmarkensammlung.service;
 import de.lm.mybriefmarkensammlung.domain.model.Category;
 import de.lm.mybriefmarkensammlung.dto.response.CategoryDTO;
 import de.lm.mybriefmarkensammlung.dto.response.CategoryTreeDTO;
+import de.lm.mybriefmarkensammlung.exception.NoSuchCategoryException;
 import de.lm.mybriefmarkensammlung.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -45,14 +46,14 @@ public class CategoryService {
                 }
             }
         }
-        return roots;//.get(0).children();
+        return roots;
     }
 
     public List<CategoryDTO> getCategoryList(Long categoryId) {
 
         List<CategoryDTO> categoryList = new ArrayList<>();
         while(categoryId != null) {
-            Category currentHead = categoryRepository.findById(categoryId).orElseThrow();
+            Category currentHead = categoryRepository.findById(categoryId).orElseThrow(() -> new NoSuchCategoryException());
             categoryList.addFirst(new CategoryDTO(currentHead.getId(), currentHead.getCategory()));
             categoryId = currentHead.getParentId();
         }
@@ -65,7 +66,7 @@ public class CategoryService {
         List<CategoryTreeDTO> categoryTree = getCategoryTree();
 
         for(CategoryDTO c : categoryDTOS) {
-            categoryTree = categoryTree.stream().filter(x -> x.category().id() == c.id()).findFirst().orElseThrow().children();
+            categoryTree = categoryTree.stream().filter(x -> x.category().id() == c.id()).findFirst().orElseThrow(() -> new NoSuchCategoryException(c.id())).children();
         }
 
         List<Long> categoryIds = new ArrayList<>();

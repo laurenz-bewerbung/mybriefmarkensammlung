@@ -5,6 +5,7 @@ import de.lm.mybriefmarkensammlung.domain.model.Collection;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionCreateRequest;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
 import de.lm.mybriefmarkensammlung.dto.response.CollectionDTO;
+import de.lm.mybriefmarkensammlung.exception.NoSuchCollectionException;
 import de.lm.mybriefmarkensammlung.repository.CollectionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +49,7 @@ public class CollectionService {
     }
 
     public CollectionDTO getCollection(Long id) {
-        Collection collection = collectionRepository.findById(id).orElse(new Collection("Sammlung konnte nicht gefunden werden", -1L, "", new HashSet<>(), false, "", -1L));
+        Collection collection = collectionRepository.findById(id).orElseThrow(() -> new NoSuchCollectionException(id));
 
         CollectionDTO collectionDTO = entityToDto(collection);
 

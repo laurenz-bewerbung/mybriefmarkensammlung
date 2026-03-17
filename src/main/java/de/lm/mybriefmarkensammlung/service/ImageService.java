@@ -1,6 +1,7 @@
 package de.lm.mybriefmarkensammlung.service;
 
 import de.lm.mybriefmarkensammlung.domain.model.Image;
+import de.lm.mybriefmarkensammlung.exception.NoSuchImageException;
 import de.lm.mybriefmarkensammlung.repository.ImageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,12 +34,6 @@ public class ImageService {
     }
 
     public Image loadImage(Long id) {
-        Optional<Image> optImage = imageRepository.findById(id);
-
-        if (optImage.isEmpty()) {
-            // todo: Fehler Image zurückgeben
-        }
-
-        return optImage.get();
+        return imageRepository.findById(id).orElseThrow(() -> new NoSuchImageException(id));
     }
 }
