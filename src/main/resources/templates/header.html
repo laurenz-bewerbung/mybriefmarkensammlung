@@ -19,10 +19,23 @@
                 </a>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto align-items-center" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                         <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{/sammlungen}">Sammlungen</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{/categories}">Kategorien</a></li>
+
+                        <li class="nav-item" sec:authorize="isAnonymous()">
+                            <a class="nav-link" th:href="@{/login}">Login</a>
+                        </li>
+
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="nav-link btn btn-link shadow-none border-0"
+                                        style="display: inline; padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>
