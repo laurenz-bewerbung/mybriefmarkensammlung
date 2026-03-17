@@ -15,11 +15,13 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
           AND (CAST(:categoryIds AS BIGINT[]) IS NULL OR category_id = ANY(CAST(:categoryIds AS BIGINT[])))
           AND (:isExhibition IS NULL OR is_exhibition = :isExhibition)
           AND (:exClass IS NULL OR exhibition_class = :exClass)
+          AND (:userId IS NULL OR user_id = :userId)
     """)
     List<Collection> search(
             @Param("title") String title,
-            @Param("categoryIds") Long[] categoryIds, // Nutze hier ein Array statt List
+            @Param("categoryIds") Long[] categoryIds,
             @Param("isExhibition") Boolean isExhibition,
-            @Param("exClass") String exClass
+            @Param("exClass") String exClass,
+            @Param("userId") Long userId
     );
 }

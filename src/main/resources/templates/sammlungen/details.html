@@ -22,7 +22,7 @@
 
         <div class="text-muted mb-2" style="font-size: 0.85rem;">
             <span>von </span>
-            <span class="fw-bold" th:text="${collection.username}">Benutzername</span>
+            <a th:href="@{/sammlungen(username=${collection.username})}"><span class="fw-bold" th:text="${collection.username}">Benutzername</span></a>
         </div>
 
         <div class="description-container mb-3">

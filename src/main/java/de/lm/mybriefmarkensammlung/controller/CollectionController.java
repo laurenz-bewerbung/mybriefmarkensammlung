@@ -1,6 +1,5 @@
 package de.lm.mybriefmarkensammlung.controller;
 
-import de.lm.mybriefmarkensammlung.domain.model.Category;
 import de.lm.mybriefmarkensammlung.domain.model.ExhibitionClass;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionCreateRequest;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
@@ -9,20 +8,15 @@ import de.lm.mybriefmarkensammlung.service.CollectionService;
 import de.lm.mybriefmarkensammlung.service.ImageService;
 import de.lm.mybriefmarkensammlung.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Optional;
 
 @Controller()
 public class CollectionController {

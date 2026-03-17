@@ -61,7 +61,8 @@ public class CollectionService {
                 searchRequest.getTitle(),
                 searchRequest.getCategory() != null ? categoryService.getAllChildIds(searchRequest.getCategory()).toArray(new Long[0]) : null,
                 searchRequest.getIsExhibition(),
-                searchRequest.getExhibitionClass() != null ? searchRequest.getExhibitionClass().name() : null
+                searchRequest.getExhibitionClass() != null ? searchRequest.getExhibitionClass().name() : null,
+                searchRequest.getUsername() != null ? userService.userIdByUsername(searchRequest.getUsername()) : null
         );
 
         List<CollectionDTO> collectionDTOS = new ArrayList<>();

@@ -7,6 +7,7 @@ public class CollectionSearchRequest {
     private Long category;
     private Boolean isExhibition;
     private ExhibitionClass exhibitionClass;
+    private String username;
 
 
     public String getTitle() {
@@ -39,5 +40,13 @@ public class CollectionSearchRequest {
 
     public void setExhibitionClass(ExhibitionClass exhibitionClass) {
         this.exhibitionClass = exhibitionClass;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

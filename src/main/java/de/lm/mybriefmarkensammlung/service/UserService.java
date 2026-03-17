@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -59,11 +60,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public Long userIdByUsername(String username) {
+    public Long userIdByUsername(String username) throws NoSuchElementException {
         return userRepository.findByUsername(username).orElseThrow().getId();
     }
 
-    public String usernameByUserId(Long id) {
+    public String usernameByUserId(Long id) throws NoSuchElementException{
         return userRepository.findById(id).orElseThrow().getUsername();
     }
 
