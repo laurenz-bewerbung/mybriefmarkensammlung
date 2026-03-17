@@ -3,6 +3,8 @@ package de.lm.mybriefmarkensammlung.exception;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,5 +43,11 @@ public class GlobalExceptionHandler {
     public String handleUserAlreadyExists(UserAlreadyExistsException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
         return "users/register";
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public String handleMaxSizeException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", "Ein Bild ist zu groß! Maximal 5 MB erlaubt.");
+        return "redirect:/sammlungen/add";
     }
 }

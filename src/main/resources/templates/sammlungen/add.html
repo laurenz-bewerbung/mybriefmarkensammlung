@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/style.css}">
     <script th:src="@{/js/toggle-exhibition.js}" defer></script>
 </head>
-<body>
+<body class="bg-light">
 
 <div th:replace="~{header :: main-header}"></div>
 
@@ -27,7 +27,12 @@
                     <h2 class="fw-bold mb-4">Sammlung hochladen</h2>
                     <hr class="mb-4 text-muted opacity-25">
 
-                    <form th:action="@{/sammlungen/add}" method="POST" enctype="multipart/form-data" class="needs-validation">
+                    <div th:if="${errorMessage}" class="alert alert-danger py-2 small shadow-sm" role="alert">
+                        <i class="bi bi-exclamation-circle me-2"></i>
+                        <span th:text="${errorMessage}">Ein Fehler ist aufgetreten.</span>
+                    </div>
+
+                    <form th:action="@{/sammlungen/add}" method="POST" enctype="multipart/form-data">
 
                         <div class="row g-3">
                             <div class="col-12">
@@ -41,9 +46,10 @@
                             </div>
 
                             <div class="col-12 col-md-6">
-                                <label for="images" class="form-label">Bilder hochladen</label>
+                                <label for="images" class="form-label">Bilder hochladen (max. 5 MB pro Bild)</label>
                                 <input type="file" id="images" name="images" class="form-control"
-                                       accept="image/*" multiple>
+                                       accept="image/*" multiple required>
+                                <div class="form-text small text-muted">Mindestens ein Bild erforderlich.</div>
                             </div>
 
                             <div class="col-12">
