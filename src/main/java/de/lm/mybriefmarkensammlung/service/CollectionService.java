@@ -56,13 +56,21 @@ public class CollectionService {
     }
 
     public List<CollectionDTO> getCollections(CollectionSearchRequest searchRequest) {
-        System.out.println(searchRequest.getIsExhibition());
+        Long userId = null;
+        if (searchRequest.getUsername() != null && !searchRequest.getUsername().isBlank()) {
+            userId = userService.userIdByUsername(searchRequest.getUsername(), false);
+
+            if (userId == null) {
+                return new ArrayList<>(); // User does not exist -> no search results
+            }
+        }
+
         List<Collection> collections = collectionRepository.search(
                 searchRequest.getTitle(),
                 searchRequest.getCategory() != null ? categoryService.getAllChildIds(searchRequest.getCategory()).toArray(new Long[0]) : null,
                 searchRequest.getIsExhibition(),
                 searchRequest.getExhibitionClass() != null ? searchRequest.getExhibitionClass().name() : null,
-                searchRequest.getUsername() != null ? userService.userIdByUsername(searchRequest.getUsername()) : null
+                userId
         );
 
         List<CollectionDTO> collectionDTOS = new ArrayList<>();
@@ -81,6 +89,6 @@ public class CollectionService {
                                     entity.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
                                     entity.getExhibition(),
                                     entity.getExhibition() ? ExhibitionClass.valueOf(entity.getExhibitionClass()).getDisplayName() : null,
-                                    userService.usernameByUserId(entity.getId()));
+                                    userService.usernameByUserId(entity.getId(), false));
     }
 }

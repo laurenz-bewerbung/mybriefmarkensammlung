@@ -62,7 +62,7 @@ public class CollectionController {
             return "sammlungen/add";
         }
 
-        Long userId = userService.userIdByUsername(principal.getName());
+        Long userId = userService.userIdByUsername(principal.getName(), true);
         collectionService.addCollection(createRequest, userId);
         return "redirect:/sammlungen";
     }

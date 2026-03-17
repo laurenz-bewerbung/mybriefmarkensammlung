@@ -60,12 +60,22 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public Long userIdByUsername(String username) throws NoSuchElementException {
-        return userRepository.findByUsername(username).orElseThrow().getId();
+    public Long userIdByUsername(String username, boolean throwError) {
+        Optional<User> optUser = userRepository.findByUsername(username);
+
+        if (throwError) {
+            return optUser.orElseThrow().getId();
+        }
+        return optUser.map(User::getId).orElse(null);
     }
 
-    public String usernameByUserId(Long id) throws NoSuchElementException{
-        return userRepository.findById(id).orElseThrow().getUsername();
+    public String usernameByUserId(Long id, boolean throwError) {
+        Optional<User> optUser = userRepository.findById(id);
+
+        if (throwError) {
+            return optUser.orElseThrow().getUsername();
+        }
+        return optUser.map(User::getUsername).orElse(null);
     }
 
     private Role initRole(String authority) {
