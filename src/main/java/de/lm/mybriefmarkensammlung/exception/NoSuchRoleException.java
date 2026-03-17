@@ -8,8 +8,4 @@ public class NoSuchRoleException extends RuntimeException {
     public NoSuchRoleException(Long id) {
         super("Rolle mit der id " + id + " existiert nicht.");
     }
-
-    public NoSuchRoleException(String authority) {
-        super("Rolle " + authority + " existiert nicht.");
-    }
 }
