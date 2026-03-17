@@ -3,9 +3,11 @@ package de.lm.mybriefmarkensammlung.service;
 import de.lm.mybriefmarkensammlung.domain.model.Image;
 import de.lm.mybriefmarkensammlung.exception.NoSuchImageException;
 import de.lm.mybriefmarkensammlung.repository.ImageRepository;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -27,7 +29,7 @@ public class ImageService {
     }
 
     public Long storeImage(MultipartFile file, int orderId) throws IOException {
-        Image image = new Image(file.getOriginalFilename(), file.getBytes(), orderId);
+        Image image = new Image(file.getOriginalFilename(), compressImage(file), orderId);
         image = imageRepository.save(image);
 
         return image.getId();
@@ -35,5 +37,17 @@ public class ImageService {
 
     public Image loadImage(Long id) {
         return imageRepository.findById(id).orElseThrow(() -> new NoSuchImageException(id));
+    }
+
+    private byte[] compressImage(MultipartFile mpFile) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        Thumbnails.of(mpFile.getInputStream())
+                .size(1200, 1600)
+                .outputFormat("jpg")
+                .outputQuality(0.75)
+                .toOutputStream(outputStream);
+
+        return outputStream.toByteArray();
     }
 }
