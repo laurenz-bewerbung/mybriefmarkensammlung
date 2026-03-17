@@ -21,13 +21,13 @@ public class ImageService {
     public Long[] storeImages(MultipartFile[] files) throws IOException {
         Long[] ids = new Long[files.length];
         for(int i = 0; i < files.length; i++) {
-            ids[i] = storeImage(files[i]);
+            ids[i] = storeImage(files[i], i);
         }
         return ids;
     }
 
-    public Long storeImage(MultipartFile file) throws IOException {
-        Image image = new Image(file.getOriginalFilename(), file.getBytes(), 0);
+    public Long storeImage(MultipartFile file, int orderId) throws IOException {
+        Image image = new Image(file.getOriginalFilename(), file.getBytes(), orderId);
         image = imageRepository.save(image);
 
         return image.getId();
