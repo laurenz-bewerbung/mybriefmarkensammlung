@@ -20,6 +20,11 @@
 
         <h1 class="fw-bold display-5 mb-2" th:text="${collection.title}">Titel</h1>
 
+        <div class="text-muted mb-2" style="font-size: 0.85rem;">
+            <span>von </span>
+            <span class="fw-bold" th:text="${collection.username}">Benutzername</span>
+        </div>
+
         <div class="description-container mb-3">
             <p class="description-text lead text-muted" th:text="${collection.description}">Beschreibung...</p>
         </div>

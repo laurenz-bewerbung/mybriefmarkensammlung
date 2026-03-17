@@ -18,15 +18,17 @@ public class CollectionService {
     private CollectionRepository collectionRepository;
     private CategoryService categoryService;
     private ImageService imageService;
+    private UserService userService;
 
-    public CollectionService(CollectionRepository collectionRepository, CategoryService categoryService, ImageService imageService) {
+    public CollectionService(CollectionRepository collectionRepository, CategoryService categoryService, ImageService imageService, UserService userService) {
         this. collectionRepository = collectionRepository;
         this.categoryService = categoryService;
         this.imageService = imageService;
+        this.userService = userService;
     }
 
     @Transactional
-    public void addCollection(CollectionCreateRequest createRequest) throws IOException {
+    public void addCollection(CollectionCreateRequest createRequest, Long userId) throws IOException {
         System.out.println(createRequest.getIsExhibition());
         Long[] imageIds = imageService.storeImages(createRequest.getImages());
 
@@ -40,12 +42,13 @@ public class CollectionService {
                                                 createRequest.getDescription(),
                                                 images,
                                                 createRequest.getIsExhibition(),
-                                                createRequest.getExhibitionClass() != null ? createRequest.getExhibitionClass().name() : null);
+                                                createRequest.getExhibitionClass() != null ? createRequest.getExhibitionClass().name() : null,
+                                                userId);
         collectionRepository.save(collection);
     }
 
     public CollectionDTO getCollection(Long id) {
-        Collection collection = collectionRepository.findById(id).orElse(new Collection("Sammlung konnte nicht gefunden werden", -1L, "", new HashSet<>(), false, ""));
+        Collection collection = collectionRepository.findById(id).orElse(new Collection("Sammlung konnte nicht gefunden werden", -1L, "", new HashSet<>(), false, "", -1L));
 
         CollectionDTO collectionDTO = entityToDto(collection);
 
@@ -76,6 +79,7 @@ public class CollectionService {
                                     entity.getDescription(),
                                     entity.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
                                     entity.getExhibition(),
-                                    entity.getExhibition() ? ExhibitionClass.valueOf(entity.getExhibitionClass()).getDisplayName() : null);
+                                    entity.getExhibition() ? ExhibitionClass.valueOf(entity.getExhibitionClass()).getDisplayName() : null,
+                                    userService.usernameByUserId(entity.getId()));
     }
 }

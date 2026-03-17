@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS collection (
     category_id BIGINT REFERENCES category(id) ON DELETE CASCADE,
     description TEXT,
     is_exhibition BOOLEAN,
-    exhibition_class VARCHAR(255)
+    exhibition_class VARCHAR(255),
+    user_id BIGINT REFERENCES "user"(id) on DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS image (

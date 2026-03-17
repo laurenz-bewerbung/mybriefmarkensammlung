@@ -59,6 +59,14 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public Long userIdByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow().getId();
+    }
+
+    public String usernameByUserId(Long id) {
+        return userRepository.findById(id).orElseThrow().getUsername();
+    }
+
     private Role initRole(String authority) {
         return roleRepository.save(new Role(authority));
     }

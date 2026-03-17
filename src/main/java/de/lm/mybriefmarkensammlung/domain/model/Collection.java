@@ -18,19 +18,21 @@ public class Collection {
     private Boolean isExhibition;
     private String exhibitionClass;
     private String description;
+    private Long userId;
 
     @MappedCollection(idColumn = "collection_id", keyColumn = "image_id")
     private Set<CollectionImage> images = new HashSet<>();
 
     public Collection() {}
 
-    public Collection(String title, Long categoryId, String description, Set<CollectionImage> images, Boolean isExhibition, String exhibitionClass) {
+    public Collection(String title, Long categoryId, String description, Set<CollectionImage> images, Boolean isExhibition, String exhibitionClass, Long userId) {
         this.title = title;
         this.categoryId = categoryId;
         this.isExhibition = isExhibition;
         this.exhibitionClass = exhibitionClass;
         this.description = description;
         this.images = images;
+        this.userId = userId;
     }
 
     public void addImage(CollectionImage image) {
@@ -91,5 +93,13 @@ public class Collection {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

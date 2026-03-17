@@ -7,6 +7,7 @@ import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
 import de.lm.mybriefmarkensammlung.service.CategoryService;
 import de.lm.mybriefmarkensammlung.service.CollectionService;
 import de.lm.mybriefmarkensammlung.service.ImageService;
+import de.lm.mybriefmarkensammlung.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller()
@@ -28,11 +30,13 @@ public class CollectionController {
     private CollectionService collectionService;
     private ImageService imageService;
     private CategoryService categoryService;
+    private UserService userService;
 
-    public CollectionController(CollectionService collectionService, ImageService imageService, CategoryService categoryService) {
+    public CollectionController(CollectionService collectionService, ImageService imageService, CategoryService categoryService, UserService userService) {
         this.collectionService = collectionService;
         this.imageService = imageService;
         this.categoryService = categoryService;
+        this.userService = userService;
     }
 
 
@@ -59,12 +63,13 @@ public class CollectionController {
     }
 
     @PostMapping("/sammlungen/add")
-    public String add_form(@Valid CollectionCreateRequest createRequest, BindingResult bindingResult) throws IOException {
+    public String add_form(@Valid CollectionCreateRequest createRequest, BindingResult bindingResult, Principal principal) throws IOException {
         if(bindingResult.hasErrors()) {
             return "sammlungen/add";
         }
 
-        collectionService.addCollection(createRequest);
+        Long userId = userService.userIdByUsername(principal.getName());
+        collectionService.addCollection(createRequest, userId);
         return "redirect:/sammlungen";
     }
 }

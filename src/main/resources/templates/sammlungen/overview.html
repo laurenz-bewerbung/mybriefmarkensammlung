@@ -32,7 +32,12 @@
                                 <div th:replace="~{categories/list :: displayPath(list=${collection.categoryList})}"></div>
                             </div>
 
-                            <h5 class="collection-title text-dark" th:text="${collection.title}">Titel</h5>
+                            <h5 class="collection-title text-dark mb-0" th:text="${collection.title}">Titel</h5>
+
+                            <div class="text-muted mb-2" style="font-size: 0.85rem;">
+                                <span>von </span>
+                                <span class="fw-bold" th:text="${collection.username}">Benutzername</span>
+                            </div>
 
                             <div class="my-3">
                                 <a th:href="@{/sammlungen/{id}(id=${collection.id})}" class="stamp-img-container shadow-sm">
