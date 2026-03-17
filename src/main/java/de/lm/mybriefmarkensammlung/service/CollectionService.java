@@ -30,7 +30,6 @@ public class CollectionService {
 
     @Transactional
     public void addCollection(CollectionCreateRequest createRequest, Long userId) throws IOException {
-        System.out.println(createRequest.getIsExhibition());
         Long[] imageIds = imageService.storeImages(createRequest.getImages());
 
         Set<CollectionImage> images = new HashSet<>();
@@ -90,6 +89,6 @@ public class CollectionService {
                                     entity.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
                                     entity.getExhibition(),
                                     entity.getExhibition() ? ExhibitionClass.valueOf(entity.getExhibitionClass()).getDisplayName() : null,
-                                    userService.usernameByUserId(entity.getId(), false));
+                                    userService.usernameByUserId(entity.getUserId(), false));
     }
 }
