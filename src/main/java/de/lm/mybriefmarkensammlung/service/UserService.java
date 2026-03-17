@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void registerUser(RegistrationRequest registrationRequest) {
-        Role role = roleRepository.findByAuthority("ROLE_USER").orElse(roleRepository.save(new Role("ROLE_USER")));
+        Role role = roleRepository.findByAuthority("ROLE_USER").orElseGet(() ->roleRepository.save(new Role("ROLE_USER")));
 
         User user = new User(registrationRequest.getUsername(), passwordEncoder.encode(registrationRequest.getPassword()), role.getId());
         userRepository.save(user);
