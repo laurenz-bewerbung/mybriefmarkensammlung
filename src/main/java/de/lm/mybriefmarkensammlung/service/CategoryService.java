@@ -20,6 +20,11 @@ public class CategoryService {
     }
 
     public Category addCategory(CategoryCreateRequest createRequest) {
+        // error if parent category doesn't exists
+        if (createRequest.getParentId() != null && categoryRepository.findById(createRequest.getParentId()).isEmpty()) {
+            throw new NoSuchCategoryException();
+        }
+
         Category cat = new Category(createRequest.getCategory(), createRequest.getParentId());
         cat = categoryRepository.save(cat);
         return cat;
