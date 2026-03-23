@@ -1,7 +1,9 @@
 package de.lm.mybriefmarkensammlung.controller;
 
 import de.lm.mybriefmarkensammlung.domain.model.Category;
+import de.lm.mybriefmarkensammlung.dto.request.CategoryCreateRequest;
 import de.lm.mybriefmarkensammlung.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,11 +28,9 @@ public class CategoryController {
     }
 
     @PostMapping("/categories")
-    public String addCategory(
-            @RequestParam("category") String name,
-            @RequestParam(value = "parentId", required = false) Long parentId) {
+    public String addCategory(@Valid  CategoryCreateRequest createRequest) {
 
-        categoryService.addCategory(name, parentId);
+        categoryService.addCategory(createRequest);
         return "redirect:/categories";
     }
 }

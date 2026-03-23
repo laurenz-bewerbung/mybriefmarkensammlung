@@ -1,6 +1,7 @@
 package de.lm.mybriefmarkensammlung.service;
 
 import de.lm.mybriefmarkensammlung.domain.model.Category;
+import de.lm.mybriefmarkensammlung.dto.request.CategoryCreateRequest;
 import de.lm.mybriefmarkensammlung.dto.response.CategoryDTO;
 import de.lm.mybriefmarkensammlung.dto.response.CategoryTreeDTO;
 import de.lm.mybriefmarkensammlung.exception.NoSuchCategoryException;
@@ -18,8 +19,8 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Category addCategory(String category, Long parentId) {
-        Category cat = new Category(category, parentId);
+    public Category addCategory(CategoryCreateRequest createRequest) {
+        Category cat = new Category(createRequest.getCategory(), createRequest.getParentId());
         cat = categoryRepository.save(cat);
         return cat;
     }
