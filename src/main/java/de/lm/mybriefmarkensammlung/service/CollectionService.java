@@ -30,13 +30,16 @@ public class CollectionService {
 
     @Transactional
     public void addCollection(CollectionCreateRequest createRequest, Long userId) throws IOException {
+        // save images
         Long[] imageIds = imageService.storeImages(createRequest.getImages());
 
+        // instantiate collection_images
         Set<CollectionImage> images = new HashSet<>();
         for(int i = 0; i < imageIds.length; i++) {
             images.add(new CollectionImage(imageIds[i], i));
         }
 
+        // parse createRequest to Collection and store in db
         Collection collection = new Collection( createRequest.getTitle(),
                                                 createRequest.getCategory(),
                                                 createRequest.getDescription(),
@@ -49,13 +52,11 @@ public class CollectionService {
 
     public CollectionDTO getCollection(Long id) {
         Collection collection = collectionRepository.findById(id).orElseThrow(() -> new NoSuchCollectionException(id));
-
-        CollectionDTO collectionDTO = entityToDto(collection);
-
-        return collectionDTO;
+        return entityToDto(collection);
     }
 
     public List<CollectionDTO> getCollections(CollectionSearchRequest searchRequest) {
+        // handle search for username
         Long userId = null;
         if (searchRequest.getUsername() != null && !searchRequest.getUsername().isBlank()) {
             userId = userService.userIdByUsername(searchRequest.getUsername(), false);
@@ -65,6 +66,7 @@ public class CollectionService {
             }
         }
 
+        // filter collections
         List<Collection> collections = collectionRepository.search(
                 searchRequest.getTitle(),
                 searchRequest.getCategory() != null ? categoryService.getAllChildIds(searchRequest.getCategory()).toArray(new Long[0]) : null,
@@ -73,12 +75,8 @@ public class CollectionService {
                 userId
         );
 
-        List<CollectionDTO> collectionDTOS = new ArrayList<>();
-        for (Collection c : collections) {
-            collectionDTOS.add(entityToDto(c));
-        }
-
-        return collectionDTOS;
+        // map collections to DTOs
+        return collections.stream().map(c -> entityToDto(c)).toList();
     }
 
     private CollectionDTO entityToDto(Collection entity) {
