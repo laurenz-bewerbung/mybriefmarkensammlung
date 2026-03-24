@@ -2,6 +2,7 @@ package de.lm.mybriefmarkensammlung.controller;
 
 import de.lm.mybriefmarkensammlung.domain.model.ExhibitionClass;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionCreateRequest;
+import de.lm.mybriefmarkensammlung.dto.request.CollectionEditRequest;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
 import de.lm.mybriefmarkensammlung.service.CategoryService;
 import de.lm.mybriefmarkensammlung.service.CollectionService;
@@ -65,5 +66,24 @@ public class CollectionController {
         Long userId = userService.userIdByUsername(principal.getName(), true);
         collectionService.addCollection(createRequest, userId);
         return "redirect:/sammlungen";
+    }
+
+    @GetMapping("/sammlungen/edit/{id}")
+    public String edit(Model model, Principal principal, @PathVariable("id") Long id) {
+        // todo: exception if user doesn't own collection
+        model.addAttribute("collection", collectionService.getCollection(id));
+        return "sammlungen/edit";
+    }
+
+    @PostMapping("/sammlungen/edit/{id}")
+    public String edit_form(@Valid CollectionEditRequest editRequest, @PathVariable("id") Long collectionId, BindingResult bindingResult, Principal principal) {
+        if(bindingResult.hasErrors()) {
+            return "sammlungen/edit";
+        }
+
+        Long userId = userService.userIdByUsername(principal.getName(), true);
+        collectionService.editCollection(editRequest, collectionId, userId);
+
+        return "sammlungen/" + collectionId;
     }
 }

@@ -3,6 +3,7 @@ package de.lm.mybriefmarkensammlung.service;
 import de.lm.mybriefmarkensammlung.domain.model.*;
 import de.lm.mybriefmarkensammlung.domain.model.Collection;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionCreateRequest;
+import de.lm.mybriefmarkensammlung.dto.request.CollectionEditRequest;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
 import de.lm.mybriefmarkensammlung.dto.response.CollectionDTO;
 import de.lm.mybriefmarkensammlung.exception.NoSuchCollectionException;
@@ -48,6 +49,10 @@ public class CollectionService {
                                                 createRequest.getExhibitionClass() != null ? createRequest.getExhibitionClass().name() : null,
                                                 userId);
         collectionRepository.save(collection);
+    }
+
+    public void editCollection(CollectionEditRequest editRequest, Long collectionId, Long userId) {
+
     }
 
     public CollectionDTO getCollection(Long id) {
