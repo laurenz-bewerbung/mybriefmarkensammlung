@@ -52,7 +52,19 @@ public class CollectionService {
     }
 
     public void editCollection(CollectionEditRequest editRequest, Long collectionId, Long userId) {
+        Collection collection = collectionRepository.findById(collectionId).orElseThrow(() -> new NoSuchCollectionException(collectionId));
 
+        if(!collection.getUserId().equals(userId)) {
+            throw new RuntimeException(); // todo: correct exception handling
+        }
+
+        collection.setTitle(editRequest.getTitle());
+        collection.setCategoryId(editRequest.getCategory());
+        collection.setDescription(editRequest.getDescription());
+        collection.setExhibition(editRequest.getIsExhibition());
+        collection.setExhibitionClass(editRequest.getExhibitionClass() != null ? editRequest.getExhibitionClass().name() : null);
+
+        collectionRepository.save(collection);
     }
 
     public CollectionDTO getCollection(Long id) {
