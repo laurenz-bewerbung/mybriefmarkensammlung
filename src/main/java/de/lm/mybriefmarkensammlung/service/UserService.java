@@ -43,30 +43,34 @@ public class UserService implements UserDetailsService {
     }
 
     public void registerUser(RegistrationRequest registrationRequest) {
+        // exception if username not available
         if (userRepository.findByUsername(registrationRequest.getUsername()).isPresent()) {
             throw new UserAlreadyExistsException(registrationRequest.getUsername());
         }
 
-        Role role = roleRepository.findByAuthority("ROLE_USER").orElseGet(() ->roleRepository.save(new Role("ROLE_USER")));
+        // assign ROLE_USER to new User -> create this role if not present
+        Role role = roleRepository.findByAuthority("ROLE_USER").orElseGet(() -> roleRepository.save(new Role("ROLE_USER")));
+        
+        // parse registerRequest to User and save to db
         User user = new User(registrationRequest.getUsername(), passwordEncoder.encode(registrationRequest.getPassword()), role.getId());
         userRepository.save(user);
     }
 
-    public Long userIdByUsername(String username, boolean throwError) {
-        Optional<User> optUser = userRepository.findByUsername(username);
+    public Long userIdByUsername(String username, boolean throwException) {
+        Optional<Long> optId = userRepository.findIdByUsername(username);
 
-        if (throwError) {
-            return optUser.orElseThrow(() -> new NoSuchUserException(username)).getId();
+        if (throwException) {
+            return optId.orElseThrow(() -> new NoSuchUserException(username));
         }
-        return optUser.map(User::getId).orElse(null);
+        return optId.orElse(null);
     }
 
-    public String usernameByUserId(Long id, boolean throwError) {
-        Optional<User> optUser = userRepository.findById(id);
+    public String usernameByUserId(Long id, boolean throwException) {
+        Optional<String> optUsername = userRepository.findUsernameById(id);
 
-        if (throwError) {
-            return optUser.orElseThrow(() -> new NoSuchUserException(id)).getUsername();
+        if (throwException) {
+            return optUsername.orElseThrow(() -> new NoSuchUserException(id));
         }
-        return optUser.map(User::getUsername).orElse(null);
+        return optUsername.orElse(null);
     }
 }
