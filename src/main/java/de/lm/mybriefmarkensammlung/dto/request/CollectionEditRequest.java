@@ -3,6 +3,9 @@ package de.lm.mybriefmarkensammlung.dto.request;
 import de.lm.mybriefmarkensammlung.domain.model.ExhibitionClass;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public class CollectionEditRequest {
 
@@ -11,7 +14,8 @@ public class CollectionEditRequest {
     @NotNull(message = "Wähle eine Kategorie aus.")
     private Long category;
 
-    // todo: add or delete images
+    List<Long> existingImageIds;
+    MultipartFile[] newImages;
 
     private String description;
     private boolean isExhibition;
