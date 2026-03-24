@@ -69,22 +69,26 @@ public class CollectionController {
     }
 
     @GetMapping("/sammlungen/edit/{id}")
-    public String edit(Model model, Principal principal, @PathVariable("id") Long id) {
-        // todo: exception if user doesn't own collection
+    public String edit(Model model, Principal principal, @PathVariable("id") Long collectionId) {
+        Long userId = userService.userIdByUsername(principal.getName(), true);
+        collectionService.handleIllegalRessourceRequest(collectionId, userId);
+
         model.addAttribute("categories", categoryService.getCategoryTree());
         model.addAttribute("exhibitionClasses", ExhibitionClass.values());
-        model.addAttribute("collection", collectionService.getCollection(id));
+        model.addAttribute("collection", collectionService.getCollection(collectionId));
         return "sammlungen/edit";
     }
 
     @PostMapping("/sammlungen/edit/{id}")
     public String edit_form(@Valid CollectionEditRequest editRequest, @PathVariable("id") Long collectionId, BindingResult bindingResult, Principal principal) {
+        Long userId = userService.userIdByUsername(principal.getName(), true);
+        collectionService.handleIllegalRessourceRequest(collectionId, userId);
+
         if(bindingResult.hasErrors()) {
             return "sammlungen/edit";
         }
 
-        Long userId = userService.userIdByUsername(principal.getName(), true);
-        collectionService.editCollection(editRequest, collectionId, userId);
+        collectionService.editCollection(editRequest, collectionId);
 
         return "redirect:/sammlungen/" + collectionId;
     }

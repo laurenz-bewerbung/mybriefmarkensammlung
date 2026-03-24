@@ -19,7 +19,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/sammlungen/add", "/categories").authenticated()
+                        .requestMatchers("/sammlungen/add", "/sammlungen/edit/*", "/categories").authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form

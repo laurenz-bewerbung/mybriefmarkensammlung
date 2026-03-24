@@ -52,12 +52,8 @@ public class CollectionService {
         collectionRepository.save(collection);
     }
 
-    public void editCollection(CollectionEditRequest editRequest, Long collectionId, Long userId) {
+    public void editCollection(CollectionEditRequest editRequest, Long collectionId) {
         Collection collection = collectionRepository.findById(collectionId).orElseThrow(() -> new NoSuchCollectionException(collectionId));
-
-        if(!collection.getUserId().equals(userId)) {
-            throw new OwnershipException();
-        }
 
         collection.setTitle(editRequest.getTitle());
         collection.setCategoryId(editRequest.getCategory());
@@ -95,6 +91,14 @@ public class CollectionService {
 
         // map collections to DTOs
         return collections.stream().map(c -> entityToDto(c)).toList();
+    }
+
+    public void handleIllegalRessourceRequest(Long collectionId, Long userId) {
+        Long ownerId = collectionRepository.findUserIdById(collectionId).orElseThrow(() -> new NoSuchCollectionException(collectionId));
+
+        if (!ownerId.equals(userId)) {
+            throw new OwnershipException();
+        }
     }
 
     private CollectionDTO entityToDto(Collection entity) {

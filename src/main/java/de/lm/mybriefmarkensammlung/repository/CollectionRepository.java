@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CollectionRepository extends CrudRepository<Collection, Long> {
 
@@ -24,4 +25,7 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
             @Param("exClass") String exClass,
             @Param("userId") Long userId
     );
+
+    @Query("SELECT user_id from collection WHERE id = :collectionId")
+    Optional<Long> findUserIdById(@Param("collectionId") Long collectionId);
 }
