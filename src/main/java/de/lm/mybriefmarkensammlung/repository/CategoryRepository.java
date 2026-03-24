@@ -23,5 +23,19 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
     )
     SELECT * FROM category_path
     """)
-    List<Category> findCategoryPathNative(@Param("categoryId") Long categoryId);
+    List<Category> findCategoryPath(@Param("categoryId") Long categoryId);
+
+
+    @Query(value = """
+    WITH RECURSIVE sub_categories AS (
+        SELECT id FROM category WHERE id = :categoryId
+        
+        UNION ALL
+        
+        SELECT c.id FROM category c
+        JOIN sub_categories sc ON c.parent_id = sc.id
+    )
+    SELECT id FROM sub_categories
+    """)
+    List<Long> findAllChildIds(@Param("categoryId") Long categoryId);
 }
