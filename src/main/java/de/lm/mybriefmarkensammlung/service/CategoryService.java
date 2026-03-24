@@ -31,27 +31,30 @@ public class CategoryService {
     }
 
     public List<CategoryTreeDTO> getCategoryTree() {
-        List<Category> all = (List<Category>) categoryRepository.findAll();
+        // load all categories from db
+        Iterable<Category> allCategories = categoryRepository.findAll();
 
+        // map: id -> List<CategoryTreeDTO> to find in O(1)
         Map<Long, CategoryTreeDTO> map = new HashMap<>();
-        for (Category c : all) {
+        for (Category c : allCategories) {
             map.put(c.getId(), new CategoryTreeDTO(new CategoryDTO(c.getId(), c.getCategory()), new ArrayList<>()));
         }
 
+        // build tree iterativ
         List<CategoryTreeDTO> roots = new ArrayList<>();
-        for (Category c : all) {
+        for (Category c : allCategories) {
             CategoryTreeDTO node = map.get(c.getId());
+
             if (c.getParentId() == null) {
                 roots.add(node);
             } else {
+                if (!map.containsKey(c.getParentId())) throw new NoSuchCategoryException();
+
                 CategoryTreeDTO parent = map.get(c.getParentId());
-                if (parent != null) {
-                    parent.children().add(node);
-                } else {
-                    roots.add(node);
-                }
+                parent.children().add(node);
             }
         }
+
         return roots;
     }
 
