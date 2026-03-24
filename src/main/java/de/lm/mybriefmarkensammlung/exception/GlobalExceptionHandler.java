@@ -50,4 +50,10 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute("errorMessage", "Ein Bild ist zu groß! Maximal 5 MB erlaubt.");
         return "redirect:/sammlungen/add";
     }
+
+    @ExceptionHandler(OwnershipException.class)
+    public String handleOwnershipException(OwnershipException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error/404";
+    }
 }

@@ -7,6 +7,7 @@ import de.lm.mybriefmarkensammlung.dto.request.CollectionEditRequest;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
 import de.lm.mybriefmarkensammlung.dto.response.CollectionDTO;
 import de.lm.mybriefmarkensammlung.exception.NoSuchCollectionException;
+import de.lm.mybriefmarkensammlung.exception.OwnershipException;
 import de.lm.mybriefmarkensammlung.repository.CollectionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +56,7 @@ public class CollectionService {
         Collection collection = collectionRepository.findById(collectionId).orElseThrow(() -> new NoSuchCollectionException(collectionId));
 
         if(!collection.getUserId().equals(userId)) {
-            throw new RuntimeException(); // todo: correct exception handling
+            throw new OwnershipException();
         }
 
         collection.setTitle(editRequest.getTitle());
