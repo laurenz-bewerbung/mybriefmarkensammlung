@@ -71,6 +71,8 @@ public class CollectionController {
     @GetMapping("/sammlungen/edit/{id}")
     public String edit(Model model, Principal principal, @PathVariable("id") Long id) {
         // todo: exception if user doesn't own collection
+        model.addAttribute("categories", categoryService.getCategoryTree());
+        model.addAttribute("exhibitionClasses", ExhibitionClass.values());
         model.addAttribute("collection", collectionService.getCollection(id));
         return "sammlungen/edit";
     }
@@ -84,6 +86,6 @@ public class CollectionController {
         Long userId = userService.userIdByUsername(principal.getName(), true);
         collectionService.editCollection(editRequest, collectionId, userId);
 
-        return "sammlungen/" + collectionId;
+        return "redirect:/sammlungen/" + collectionId;
     }
 }

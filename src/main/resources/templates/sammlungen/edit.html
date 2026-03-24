@@ -1,10 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neue Sammlung anlegen - MyBS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script th:src="@{/js/toggle-exhibition.js}" defer></script>
 </head>
-<body>
+<body class="bg-light">
 
+<div th:replace="~{header :: main-header}"></div>
+
+<main class="container my-3 my-md-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="mb-3">
+                <a th:href="@{/sammlungen/{id}(id=${collection.id})}" class="text-decoration-none text-muted small">
+                    ← Zurück ohne zu speichern
+                </a>
+            </div>
+
+            <div class="card form-card shadow-sm">
+                <div class="card-body p-3 p-md-5">
+                    <h2 class="fw-bold mb-4">Sammlung bearbeiten</h2>
+                    <hr class="mb-4 text-muted opacity-25">
+
+                    <div th:if="${errorMessage}" class="alert alert-danger py-2 small shadow-sm" role="alert">
+                        <i class="bi bi-exclamation-circle me-2"></i>
+                        <span th:text="${errorMessage}">Ein Fehler ist aufgetreten.</span>
+                    </div>
+
+                    <form th:action="@{/sammlungen/edit/{id}(id=${collection.id})}" method="POST" enctype="multipart/form-data">
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="title" class="form-label">Titel der Sammlung</label>
+                                <input type="text" id="title" name="title" class="form-control"
+                                       th:value="${collection.title}" required>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label for="category" class="form-label">Kategorie</label>
+                                <div id="category" th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${collection.categoryList != null && !collection.categoryList.isEmpty() ? collection.categoryList.getLast().id : null})}">
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="description" class="form-label">Beschreibung</label>
+                                <textarea id="description" name="description" class="form-control" rows="4"
+                                          th:text="${collection.description}"></textarea>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <div class="form-check form-switch p-3 border rounded bg-light d-flex align-items-center">
+                                    <input class="form-check-input ms-0 me-3" type="checkbox" id="isExhibition"
+                                           name="isExhibition" onchange="toggleExhibition()"
+                                           th:checked="${collection.isExhibition}">
+                                    <label class="form-check-label fw-bold" for="isExhibition">
+                                        Ist dies ein offizielles Ausstellungs-Exponat?
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="exhibitionContainer" class="col-12 mt-2" hidden>
+                                <div class="p-3 border rounded border-primary-subtle" style="background-color: #f0f7ff;">
+                                    <label for="exhibitionClass" class="form-label">Ausstellungsklasse wählen:</label>
+                                    <div id="exhibitionClass" th:replace="~{sammlungen/exhibition-dropdown :: exhibitionDropdown(name='exhibitionClass', classes=${exhibitionClasses}, selectedClass=${collection.exhibitionClass})}"> </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4 mt-md-5">
+                                <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
+                                    Bearbeiten
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
