@@ -58,20 +58,23 @@ public class CategoryService {
         return roots;
     }
 
-    public List<CategoryDTO> getCategoryList(Long categoryId) {
+    public List<CategoryDTO> getCategoryPath(Long categoryId) {
+        List<Category> reversedCategoryPath = categoryRepository.findCategoryPathNative(categoryId);
 
-        List<CategoryDTO> categoryList = new ArrayList<>();
-        while(categoryId != null) {
-            Category currentHead = categoryRepository.findById(categoryId).orElseThrow(() -> new NoSuchCategoryException());
-            categoryList.addFirst(new CategoryDTO(currentHead.getId(), currentHead.getCategory()));
-            categoryId = currentHead.getParentId();
+        if(reversedCategoryPath == null || reversedCategoryPath.size() == 0) {
+            throw new NoSuchCategoryException();
         }
 
-        return categoryList;
+        List<CategoryDTO> categoryPath = new LinkedList<>();
+        for(Category c : reversedCategoryPath) {
+            categoryPath.addFirst(new CategoryDTO(c.getId(), c.getCategory()));
+        }
+
+        return categoryPath;
     }
 
     public List<Long> getAllChildIds(Long categoryId) {
-        List<CategoryDTO> categoryDTOS = getCategoryList(categoryId);
+        List<CategoryDTO> categoryDTOS = getCategoryPath(categoryId);
         List<CategoryTreeDTO> categoryTree = getCategoryTree();
 
         for(CategoryDTO c : categoryDTOS) {

@@ -84,7 +84,7 @@ public class CollectionService {
     private CollectionDTO entityToDto(Collection entity) {
         return new CollectionDTO(   entity.getId(),
                                     entity.getTitle(),
-                                    categoryService.getCategoryList(entity.getCategoryId()),
+                                    categoryService.getCategoryPath(entity.getCategoryId()),
                                     entity.getDescription(),
                                     entity.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
                                     entity.getExhibition(),
