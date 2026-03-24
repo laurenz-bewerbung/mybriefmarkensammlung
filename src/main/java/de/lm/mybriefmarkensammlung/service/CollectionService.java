@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CollectionService {
@@ -52,11 +53,34 @@ public class CollectionService {
         collectionRepository.save(collection);
     }
 
-    public void editCollection(CollectionEditRequest editRequest, Long collectionId) {
+    @Transactional
+    public void editCollection(CollectionEditRequest editRequest, Long collectionId) throws IOException {
         Collection collection = collectionRepository.findById(collectionId).orElseThrow(() -> new NoSuchCollectionException(collectionId));
 
+        // save new images and combine them with the remaining
+        List<Long> imageIds = editRequest.getExistingImageIds();
+        if(editRequest.getNewImages() != null && editRequest.getNewImages().length != 0 && !editRequest.getNewImages()[0].isEmpty()) {
+            Long[] newImageIds = imageService.storeImages(editRequest.getNewImages());
+            imageIds.addAll(Arrays.asList(newImageIds));
+        }
+
+        // add images to collection and set orderId
+        Set<CollectionImage> images = new HashSet<>();
+        for(int i = 0; i < imageIds.size(); i++) {
+            images.add(new CollectionImage(imageIds.get(i), i));
+        }
+
+        // delete unused images from db
+        for (CollectionImage oldImage : collection.getImages()) {
+            if (!imageIds.contains(oldImage.getImageId())) {
+                imageService.deleteImage(oldImage.getImageId());
+            }
+        }
+
+        // edit collection in db
         collection.setTitle(editRequest.getTitle());
         collection.setCategoryId(editRequest.getCategory());
+        collection.setImages(images);
         collection.setDescription(editRequest.getDescription());
         collection.setExhibition(editRequest.getIsExhibition());
         collection.setExhibitionClass(editRequest.getExhibitionClass() != null ? editRequest.getExhibitionClass().name() : null);
@@ -108,7 +132,7 @@ public class CollectionService {
                                     entity.getDescription(),
                                     entity.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
                                     entity.getExhibition(),
-                                    entity.getExhibition() ? ExhibitionClass.valueOf(entity.getExhibitionClass()).getDisplayName() : null,
+                                    entity.getExhibitionClass() != null ? ExhibitionClass.valueOf(entity.getExhibitionClass()).getDisplayName() : null,
                                     userService.usernameByUserId(entity.getUserId(), false));
     }
 }

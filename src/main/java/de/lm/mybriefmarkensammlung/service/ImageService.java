@@ -39,6 +39,10 @@ public class ImageService {
         return imageRepository.findById(id).orElseThrow(() -> new NoSuchImageException(id));
     }
 
+    public void deleteImage(Long id) {
+        imageRepository.deleteById(id);
+    }
+
     private byte[] compressImage(MultipartFile mpFile) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 

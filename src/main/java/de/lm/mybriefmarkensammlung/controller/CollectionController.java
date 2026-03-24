@@ -80,7 +80,7 @@ public class CollectionController {
     }
 
     @PostMapping("/sammlungen/edit/{id}")
-    public String edit_form(@Valid CollectionEditRequest editRequest, @PathVariable("id") Long collectionId, BindingResult bindingResult, Principal principal) {
+    public String edit_form(@Valid CollectionEditRequest editRequest, @PathVariable("id") Long collectionId, BindingResult bindingResult, Principal principal) throws IOException {
         Long userId = userService.userIdByUsername(principal.getName(), true);
         collectionService.handleIllegalRessourceRequest(collectionId, userId);
 

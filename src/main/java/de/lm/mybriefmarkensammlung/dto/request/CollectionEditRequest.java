@@ -37,6 +37,15 @@ public class CollectionEditRequest {
         this.category = category;
     }
 
+
+    public List<Long> getExistingImageIds() { return existingImageIds; }
+
+    public void setExistingImageIds(List<Long> existingImageIds) { this.existingImageIds = existingImageIds; }
+
+    public MultipartFile[] getNewImages() { return newImages; }
+
+    public void setNewImages(MultipartFile[] newImages) { this.newImages = newImages; }
+
     public String getDescription() {
         return description;
     }
