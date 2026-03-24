@@ -7,6 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/style.css}">
     <script th:src="@{/js/toggle-exhibition.js}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script th:src="@{/js/edit-images.js}" defer></script>
 </head>
 <body class="bg-light">
 
@@ -45,6 +47,19 @@
                                 <label for="category" class="form-label">Kategorie</label>
                                 <div id="category" th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${collection.categoryList != null && !collection.categoryList.isEmpty() ? collection.categoryList.getLast().id : null})}">
                                 </div>
+                            </div>
+
+                            <div class="row g-2 mb-3" id="image-sortable">
+                                <div th:each="img : ${collection.images}" class="col-3 position-relative image-item" th:data-id="${img.imageId}">
+                                    <img th:src="@{/image/{id}(id=${img.imageId})}" class="img-thumbnail w-100" style="height: 120px; object-fit: cover;">
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 remove-img">×</button>
+                                    <input type="hidden" name="existingImageIds" th:value="${img.imageId}">
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <label class="form-label">Zusätzliche Bilder hinzufügen</label>
+                                <input type="file" id="newImages" name="newImages" class="form-control" multiple accept="image/*">
                             </div>
 
                             <div class="col-12">
