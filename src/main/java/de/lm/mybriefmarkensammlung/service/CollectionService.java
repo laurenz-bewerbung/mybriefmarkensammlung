@@ -88,6 +88,10 @@ public class CollectionService {
         collectionRepository.save(collection);
     }
 
+    public void deleteCollection(Long collectionId) {
+
+    }
+
     public CollectionDTO getCollection(Long id) {
         Collection collection = collectionRepository.findById(id).orElseThrow(() -> new NoSuchCollectionException(id));
         return entityToDto(collection);

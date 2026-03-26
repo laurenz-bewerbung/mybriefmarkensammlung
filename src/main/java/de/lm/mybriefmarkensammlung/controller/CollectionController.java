@@ -80,7 +80,7 @@ public class CollectionController {
     }
 
     @PostMapping("/sammlungen/edit/{id}")
-    public String edit_form(/*@Valid*/ CollectionEditRequest editRequest, @PathVariable("id") Long collectionId, BindingResult bindingResult, Principal principal) throws IOException {
+    public String edit_form(@Valid CollectionEditRequest editRequest, @PathVariable("id") Long collectionId, BindingResult bindingResult, Principal principal) throws IOException {
         Long userId = userService.userIdByUsername(principal.getName(), true);
         collectionService.handleIllegalRessourceRequest(collectionId, userId);
 
@@ -91,5 +91,15 @@ public class CollectionController {
         collectionService.editCollection(editRequest, collectionId);
 
         return "redirect:/sammlungen/" + collectionId;
+    }
+
+    @PostMapping("/sammlungen/delete/{id}")
+    public String delete(@PathVariable("id") Long collectionId, Principal principal) {
+        Long userId = userService.userIdByUsername(principal.getName(), true);
+        collectionService.handleIllegalRessourceRequest(collectionId, userId);
+
+        collectionService.deleteCollection(collectionId);
+
+        return "redirect:/sammlungen";
     }
 }
