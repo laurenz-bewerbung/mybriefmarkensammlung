@@ -88,8 +88,15 @@ public class CollectionService {
         collectionRepository.save(collection);
     }
 
+    @Transactional
     public void deleteCollection(Long collectionId) {
+        Collection collection = collectionRepository.findById(collectionId).orElseThrow(() -> new NoSuchCollectionException(collectionId));
 
+        for(CollectionImage collectionImage : collection.getImages()) {
+            imageService.deleteImage(collectionImage.getImageId());
+        }
+
+        collectionRepository.deleteById(collectionId);
     }
 
     public CollectionDTO getCollection(Long id) {
