@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.support.MultipartFilter;
 import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
 
@@ -51,16 +52,5 @@ public class SecurityConfiguration {
     @Bean
     public SpringSecurityDialect springSecurityDialect() {
         return new SpringSecurityDialect();
-    }
-
-    // Multiparts have to be resolved before csrf check
-    @Bean
-    public FilterRegistrationBean<MultipartFilter> multipartFilterRegistration() {
-        FilterRegistrationBean<MultipartFilter> registration = new FilterRegistrationBean<>();
-        MultipartFilter filter = new MultipartFilter();
-        filter.setMultipartResolverBeanName("multipartResolver");
-        registration.setFilter(filter);
-        registration.setOrder(Integer.MIN_VALUE); // before security
-        return registration;
     }
 }
