@@ -14,6 +14,7 @@ public class CollectionEditRequest {
     @NotNull(message = "Wähle eine Kategorie aus.")
     private Long category;
 
+    // because these two fields are dependent the validation happens in the controller
     List<Long> existingImageIds;
     MultipartFile[] newImages;
 

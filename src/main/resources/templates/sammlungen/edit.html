@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neue Sammlung anlegen - MyBS</title>
+    <title>Sammlung bearbeiten - MyBS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <script th:src="@{/js/toggle-exhibition.js}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <script th:src="@{/js/edit-images.js}" defer></script>
@@ -37,41 +38,70 @@
                     <form th:action="@{/sammlungen/edit/{id}(id=${collection.id})}" method="POST" enctype="multipart/form-data">
 
                         <div class="row g-3">
+
                             <div class="col-12">
                                 <label for="title" class="form-label">Titel der Sammlung</label>
-                                <input type="text" id="title" name="title" class="form-control"
-                                       th:value="${collection.title}" required>
+                                <input type="text" id="title" name="title"
+                                       class="form-control"
+                                       th:value="${collection.title}"
+                                       th:classappend="${#fields.hasErrors('collectionEditRequest.title')} ? 'is-invalid'" required>
+
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('collectionEditRequest.title')}"
+                                     th:errors="${collectionEditRequest.title}"></div>
                             </div>
 
                             <div class="col-12 col-md-6">
                                 <label for="category" class="form-label">Kategorie</label>
                                 <div id="category" th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${collection.categoryList != null && !collection.categoryList.isEmpty() ? collection.categoryList.getLast().id : null})}">
                                 </div>
+                                <div class="text-danger small mt-1"
+                                     th:if="${#fields.hasErrors('collectionEditRequest.category')}"
+                                     th:text="${#fields.errors('collectionEditRequest.category')[0]}"></div>
                             </div>
 
-                            <div class="row g-2 mb-3" id="image-sortable">
-                                <div th:each="img : ${collection.images}" class="col-3 position-relative image-item" th:data-id="${img.imageId}">
-                                    <img th:src="@{/image/{id}(id=${img.imageId})}" class="img-thumbnail w-100" style="height: 120px; object-fit: cover;">
-                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 remove-img">×</button>
-                                    <input type="hidden" name="existingImageIds" th:value="${img.imageId}">
+                            <div class="col-12">
+                                <label class="form-label d-block">Vorhandene Bilder</label>
+                                <div class="row g-2 mb-3" id="image-sortable">
+                                    <div th:each="img : ${collection.images}" class="col-3 position-relative image-item" th:data-id="${img.imageId}">
+                                        <img th:src="@{/image/{id}(id=${img.imageId})}" class="img-thumbnail w-100" style="height: 120px; object-fit: cover;">
+                                        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 remove-img">×</button>
+                                        <input type="hidden" name="existingImageIds" th:value="${img.imageId}">
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="mt-3">
-                                <label class="form-label">Zusätzliche Bilder hinzufügen</label>
-                                <input type="file" id="newImages" name="newImages" class="form-control" multiple accept="image/*">
+                            <div class="col-12" th:if="${#fields.hasErrors('collectionEditRequest.existingImageIds')}">
+                                <div class="alert alert-danger py-2 small">
+                                    <i class="bi bi-image me-2"></i>
+                                    <span th:text="${#fields.errors('collectionEditRequest.existingImageIds')[0]}">Bildfehler</span>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-2">
+                                <label for="newImages" class="form-label">Zusätzliche Bilder hinzufügen</label>
+                                <input type="file" id="newImages" name="newImages" class="form-control"
+                                       multiple accept="image/*"
+                                       th:classappend="${#fields.hasErrors('collectionEditRequest.newImages')} ? 'is-invalid'">
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('collectionEditRequest.newImages')}"
+                                     th:text="${#fields.errors('collectionEditRequest.newImages')[0]}"></div>
                             </div>
 
                             <div class="col-12">
                                 <label for="description" class="form-label">Beschreibung</label>
                                 <textarea id="description" name="description" class="form-control" rows="4"
                                           th:text="${collection.description}"></textarea>
+                                <div class="text-danger small"
+                                     th:if="${#fields.hasErrors('collectionEditRequest.description')}"
+                                     th:text="${#fields.errors('collectionEditRequest.description')[0]}"></div>
                             </div>
 
                             <div class="col-12 mt-4">
                                 <div class="form-check form-switch p-3 border rounded bg-light d-flex align-items-center">
-                                    <input class="form-check-input ms-0 me-3" type="checkbox" id="isExhibition"
-                                           name="isExhibition" onchange="toggleExhibition()"
+                                    <input class="form-check-input ms-0 me-3" type="checkbox"
+                                           id="isExhibition" name="isExhibition"
+                                           onchange="toggleExhibition()"
                                            th:checked="${collection.isExhibition}">
                                     <label class="form-check-label fw-bold" for="isExhibition">
                                         Ist dies ein offizielles Ausstellungs-Exponat?
@@ -79,7 +109,7 @@
                                 </div>
                             </div>
 
-                            <div id="exhibitionContainer" class="col-12 mt-2" hidden>
+                            <div id="exhibitionContainer" class="col-12 mt-2" th:hidden="${!collection.isExhibition}">
                                 <div class="p-3 border rounded border-primary-subtle" style="background-color: #f0f7ff;">
                                     <label for="exhibitionClass" class="form-label">Ausstellungsklasse wählen:</label>
                                     <div id="exhibitionClass" th:replace="~{sammlungen/exhibition-dropdown :: exhibitionDropdown(name='exhibitionClass', classes=${exhibitionClasses}, selectedClass=${collection.exhibitionClass})}"> </div>
@@ -88,7 +118,7 @@
 
                             <div class="col-12 mt-4 mt-md-5">
                                 <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
-                                    Bearbeiten
+                                    Änderungen speichern
                                 </button>
                             </div>
                         </div>

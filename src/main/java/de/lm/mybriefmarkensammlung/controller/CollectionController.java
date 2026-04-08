@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -81,26 +82,28 @@ public class CollectionController {
         model.addAttribute("categories", categoryService.getCategoryTree());
         model.addAttribute("exhibitionClasses", ExhibitionClass.values());
         model.addAttribute("collection", collectionService.getCollection(collectionId));
+        model.addAttribute("collectionEditRequest", new CollectionEditRequest());
         return "sammlungen/edit";
     }
 
     @PostMapping("/sammlungen/edit/{id}")
-    public String edit_form(@Valid CollectionEditRequest editRequest, BindingResult bindingResult, @PathVariable("id") Long collectionId, Principal principal, Model model) throws IOException {
+    public String edit_form(@Valid @ModelAttribute("collectionEditRequest") CollectionEditRequest editRequest, BindingResult bindingResult, @PathVariable("id") Long collectionId, Principal principal, Model model) throws IOException {
         Long userId = userService.userIdByUsername(principal.getName(), true);
         collectionService.handleIllegalRessourceRequest(collectionId, userId);
+
+        // validate required image
+        if((editRequest.getExistingImageIds() == null || editRequest.getExistingImageIds().size() == 0) && (editRequest.getNewImages() == null || editRequest.getNewImages().length == 0 || editRequest.getNewImages()[0].isEmpty())) {
+            bindingResult.rejectValue("existingImageIds", "error","Die Sammlung braucht mindestens ein Bild.");
+        }
 
         if(bindingResult.hasErrors()) {
             model.addAttribute("categories", categoryService.getCategoryTree());
             model.addAttribute("exhibitionClasses", ExhibitionClass.values());
-
-            CollectionDTO collectionDTO = collectionService.getCollection(collectionId);
-
             model.addAttribute("collection", collectionService.getCollection(collectionId));
             return "sammlungen/edit";
         }
 
         collectionService.editCollection(editRequest, collectionId);
-
         return "redirect:/sammlungen/" + collectionId;
     }
 
