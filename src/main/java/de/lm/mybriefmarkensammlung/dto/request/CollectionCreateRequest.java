@@ -1,6 +1,7 @@
 package de.lm.mybriefmarkensammlung.dto.request;
 
 import de.lm.mybriefmarkensammlung.domain.model.ExhibitionClass;
+import de.lm.mybriefmarkensammlung.dto.request.CustomValidator.RequiredUpload;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +13,7 @@ public class CollectionCreateRequest {
     private String title;
     @NotNull(message = "Wähle eine Kategorie aus.")
     private Long category;
-    @NotEmpty(message = "Lade mindestens ein Bild hoch.")
+    @RequiredUpload(message = "Lade mindestens ein Bild hoch.")
     private MultipartFile[] images;
 
     private String description;

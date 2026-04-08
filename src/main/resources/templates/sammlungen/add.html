@@ -32,52 +32,53 @@
                         <span th:text="${errorMessage}">Ein Fehler ist aufgetreten.</span>
                     </div>
 
-                    <form th:action="@{/sammlungen/add}" method="POST" enctype="multipart/form-data">
+                    <form th:action="@{/sammlungen/add}" th:object="${collectionCreateRequest}" method="POST" enctype="multipart/form-data">
 
                         <div class="row g-3">
                             <div class="col-12">
                                 <label for="title" class="form-label">Titel der Sammlung</label>
-                                <input type="text" id="title" name="title" class="form-control" required>
+                                <input type="text" th:field="*{title}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
                             </div>
 
                             <div class="col-12 col-md-6">
                                 <label for="category" class="form-label">Kategorie</label>
-                                <div id="category" th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=${currentParentId})}"></div>
+                                <div id="category" th:replace="~{categories/dropdown :: dropdown(name='category', selectedId=*{category})}"></div>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
                             </div>
 
                             <div class="col-12 col-md-6">
-                                <label for="images" class="form-label">Bilder hochladen (max. 5 MB pro Bild)</label>
+                                <label for="images" class="form-label">Bilder hochladen</label>
                                 <input type="file" id="images" name="images" class="form-control"
-                                       accept="image/*" multiple required>
-                                <div class="form-text small text-muted">Mindestens ein Bild erforderlich.</div>
+                                       accept="image/*" multiple th:classappend="${#fields.hasErrors('images')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('images')}" th:errors="*{images}"></div>
                             </div>
 
                             <div class="col-12">
                                 <label for="description" class="form-label">Beschreibung</label>
-                                <textarea id="description" name="description" class="form-control" rows="4"></textarea>
+                                <textarea th:field="*{description}" class="form-control" rows="4"></textarea>
                             </div>
 
                             <div class="col-12 mt-4">
                                 <div class="form-check form-switch p-3 border rounded bg-light d-flex align-items-center">
-                                    <input class="form-check-input ms-0 me-3" type="checkbox" id="isExhibition"
-                                           name="isExhibition" onchange="toggleExhibition()">
+                                    <input class="form-check-input ms-0 me-3" type="checkbox" th:field="*{isExhibition}"
+                                           id="isExhibition" onchange="toggleExhibition()">
                                     <label class="form-check-label fw-bold" for="isExhibition">
                                         Ist dies ein offizielles Ausstellungs-Exponat?
                                     </label>
                                 </div>
                             </div>
 
-                            <div id="exhibitionContainer" class="col-12 mt-2" hidden>
+                            <div id="exhibitionContainer" class="col-12 mt-2" th:hidden="${!collectionCreateRequest.isExhibition}">
                                 <div class="p-3 border rounded border-primary-subtle" style="background-color: #f0f7ff;">
                                     <label for="exhibitionClass" class="form-label">Ausstellungsklasse wählen:</label>
-                                    <div id="exhibitionClass" th:replace="~{sammlungen/exhibition-dropdown :: exhibitionDropdown(name='exhibitionClass', classes=${exhibitionClasses}, selectedClass=null)}"> </div>
+                                    <div id="exhibitionClass" th:replace="~{sammlungen/exhibition-dropdown :: exhibitionDropdown(name='exhibitionClass', classes=${exhibitionClasses}, selectedClass=*{exhibitionClass})}"> </div>
                                 </div>
                             </div>
 
                             <div class="col-12 mt-4 mt-md-5">
-                                <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
-                                    Hochladen
-                                </button>
+                                <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">Hochladen</button>
                             </div>
                         </div>
                     </form>

@@ -4,6 +4,7 @@ import de.lm.mybriefmarkensammlung.domain.model.ExhibitionClass;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionCreateRequest;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionEditRequest;
 import de.lm.mybriefmarkensammlung.dto.request.CollectionSearchRequest;
+import de.lm.mybriefmarkensammlung.dto.response.CollectionDTO;
 import de.lm.mybriefmarkensammlung.service.CategoryService;
 import de.lm.mybriefmarkensammlung.service.CollectionService;
 import de.lm.mybriefmarkensammlung.service.ImageService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -54,12 +56,15 @@ public class CollectionController {
     public String add(Model model) {
         model.addAttribute("categories", categoryService.getCategoryTree());
         model.addAttribute("exhibitionClasses", ExhibitionClass.values());
+        model.addAttribute("collectionCreateRequest", new CollectionCreateRequest());
         return "sammlungen/add";
     }
 
     @PostMapping("/sammlungen/add")
-    public String add_form(@Valid CollectionCreateRequest createRequest, BindingResult bindingResult, Principal principal) throws IOException {
+    public String add_form(@Valid @ModelAttribute CollectionCreateRequest createRequest, BindingResult bindingResult, Principal principal, Model model) throws IOException {
         if(bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.getCategoryTree());
+            model.addAttribute("exhibitionClasses", ExhibitionClass.values());
             return "sammlungen/add";
         }
 
@@ -80,11 +85,17 @@ public class CollectionController {
     }
 
     @PostMapping("/sammlungen/edit/{id}")
-    public String edit_form(@Valid CollectionEditRequest editRequest, @PathVariable("id") Long collectionId, BindingResult bindingResult, Principal principal) throws IOException {
+    public String edit_form(@Valid CollectionEditRequest editRequest, BindingResult bindingResult, @PathVariable("id") Long collectionId, Principal principal, Model model) throws IOException {
         Long userId = userService.userIdByUsername(principal.getName(), true);
         collectionService.handleIllegalRessourceRequest(collectionId, userId);
 
         if(bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.getCategoryTree());
+            model.addAttribute("exhibitionClasses", ExhibitionClass.values());
+
+            CollectionDTO collectionDTO = collectionService.getCollection(collectionId);
+
+            model.addAttribute("collection", collectionService.getCollection(collectionId));
             return "sammlungen/edit";
         }
 
