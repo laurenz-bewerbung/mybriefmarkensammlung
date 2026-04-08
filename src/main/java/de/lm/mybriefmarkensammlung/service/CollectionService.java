@@ -143,7 +143,7 @@ public class CollectionService {
                                     entity.getDescription(),
                                     entity.getImages().stream().sorted(Comparator.comparingInt(CollectionImage::getOrderId)).toList(),
                                     entity.getExhibition(),
-                                    entity.getExhibitionClass() != null ? ExhibitionClass.valueOf(entity.getExhibitionClass()).getDisplayName() : null,
+                                    entity.getExhibitionClass() != null ? ExhibitionClass.valueOf(entity.getExhibitionClass()) : null,
                                     userService.usernameByUserId(entity.getUserId(), false));
     }
 }

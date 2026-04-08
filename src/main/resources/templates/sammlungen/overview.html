@@ -71,7 +71,7 @@
                             <div th:if="${collection.isExhibition}" class="mt-auto">
                 <span class="badge bg-light text-dark border rounded-pill py-2 px-3 w-100 text-truncate shadow-sm">
                     <i class="bi bi-trophy me-1 text-warning"></i>
-                    <span th:text="${collection.exhibitionClass}">Klasse</span>
+                    <span th:text="${collection.exhibitionClass.getDisplayName()}">Klasse</span>
                 </span>
                             </div>
                             <div th:unless="${collection.isExhibition}" class="mt-auto" style="height: 38px;"></div>
