@@ -34,6 +34,8 @@ class CategoryRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    /// findCategoryPath
+
     @Test
     @DisplayName("Should find the path from root 'Europa' to the leaf 'DDR' in reversed order")
     void testFindCategoryPathFromRootToLeaf() {
@@ -101,5 +103,25 @@ class CategoryRepositoryTest {
 
         // Assert
         assertThat(path).isEmpty();
+    }
+
+    /// findAllChildIds
+
+    @Test
+    @DisplayName("Should find parent and direct children")
+    void testFindDirectChildren() {
+        // Arrange
+        Category c1 = categoryRepository.save(new Category("Europa", 0L));
+        Category c2 = categoryRepository.save(new Category("Deutschland", c1.getId()));
+        Category c3 = categoryRepository.save(new Category("DDR", c2.getId()));
+        Category c4 = categoryRepository.save(new Category("BRD", c2.getId()));
+
+        // Act
+        List<Long> ids = categoryRepository.findAllChildIds(c2.getId());
+
+        // Assert
+        assertThat(ids).hasSize(3);
+
+        assertThat(ids).containsAll(List.of(c2.getId(), c3.getId(), c4.getId()));
     }
 }
