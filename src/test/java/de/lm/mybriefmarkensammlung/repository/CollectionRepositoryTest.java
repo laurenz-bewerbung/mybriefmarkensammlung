@@ -49,6 +49,22 @@ class CollectionRepositoryTest extends AbstractPostgresTest {
     }
 
     @Test
+    @DisplayName("Should find all collections by empty filter")
+    void testFindAllCollectionByEmptyFilter() {
+        // Arrange
+        Collection col1 = collectionRepository.save(new Collection("title1", cat1Id, "", new HashSet<>(), true, "Class1", user1Id));
+        Collection col2 = collectionRepository.save(new Collection("title2", cat2Id, "", new HashSet<>(), false, null, user2Id));
+
+        // Act
+        List<Collection> collections = collectionRepository.search("", null, null, null, null);
+
+        // Assert
+        assertThat(collections).hasSize(2);
+        assertThat(collections.get(0).getId()).isEqualTo(col1.getId());
+        assertThat(collections.get(1).getId()).isEqualTo(col2.getId());
+    }
+
+    @Test
     @DisplayName("Should find collection by title")
     void testFindCollectionByTitle() {
         // Arrange
