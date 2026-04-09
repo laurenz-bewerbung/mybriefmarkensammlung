@@ -112,6 +112,7 @@ class CategoryRepositoryTest {
     void testFindDirectChildren() {
         // Arrange
         Category c1 = categoryRepository.save(new Category("Europa", 0L));
+        categoryRepository.save(new Category("Schweiz", c1.getId()));
         Category c2 = categoryRepository.save(new Category("Deutschland", c1.getId()));
         Category c3 = categoryRepository.save(new Category("DDR", c2.getId()));
         Category c4 = categoryRepository.save(new Category("BRD", c2.getId()));
