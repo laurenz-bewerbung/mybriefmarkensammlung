@@ -63,4 +63,18 @@ class CollectionRepositoryTest extends AbstractPostgresTest {
         assertThat(collections).hasSize(1);
         assertThat(collections.get(0).getTitle()).isEqualTo(col1.getTitle());
     }
+
+    @Test
+    @DisplayName("Should find nothing by title")
+    void testFindNothingByTitle() {
+        // Arrange
+        Collection col1 = collectionRepository.save(new Collection("title1", cat1Id, "", new HashSet<>(), false, null, user1Id));
+        Collection col2 = collectionRepository.save(new Collection("title2", cat1Id, "", new HashSet<>(), false, null, user1Id));
+
+        // Act
+        List<Collection> collections = collectionRepository.search("nothing", null, null, null, null);
+
+        // Assert
+        assertThat(collections).hasSize(0);
+    }
 }
