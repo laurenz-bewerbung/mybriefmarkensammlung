@@ -150,4 +150,18 @@ class CollectionRepositoryTest extends AbstractPostgresTest {
         assertThat(collections).hasSize(1);
         assertThat(collections.get(0).getExhibitionClass()).isEqualTo("Class1");
     }
+
+    @Test
+    @DisplayName("Should find nothing by exhibition class")
+    void testFindNothingByExhibitionClass() {
+        // Arrange
+        Collection col1 = collectionRepository.save(new Collection("test", cat1Id, "", new HashSet<>(), true, "Class1", user1Id));
+        Collection col2 = collectionRepository.save(new Collection("test", cat1Id, "", new HashSet<>(), true, "Class1", user1Id));
+
+        // Act
+        List<Collection> collections = collectionRepository.search("", null, true, "Class2", null);
+
+        // Assert
+        assertThat(collections).hasSize(0);
+    }
 }
