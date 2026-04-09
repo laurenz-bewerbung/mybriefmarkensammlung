@@ -87,4 +87,19 @@ class CategoryRepositoryTest {
 
         assertThat(path.get(0).getCategory()).isEqualTo(c1.getCategory());
     }
+
+    @Test
+    @DisplayName("Should find nothing when looking for not existing category")
+    void testFindNotExistingCategory() {
+        // Arrange
+        Category c1 = categoryRepository.save(new Category("Europa", 0L));
+        Category c2 = categoryRepository.save(new Category("Deutschland", c1.getId()));
+        categoryRepository.save(new Category("DDR", c2.getId()));
+
+        // Act
+        List<Category> path = categoryRepository.findCategoryPath(0L);
+
+        // Assert
+        assertThat(path).isEmpty();
+    }
 }
