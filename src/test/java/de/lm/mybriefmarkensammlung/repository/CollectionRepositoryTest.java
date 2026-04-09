@@ -60,8 +60,7 @@ class CollectionRepositoryTest extends AbstractPostgresTest {
 
         // Assert
         assertThat(collections).hasSize(2);
-        assertThat(collections.get(0).getId()).isEqualTo(col1.getId());
-        assertThat(collections.get(1).getId()).isEqualTo(col2.getId());
+        assertThat(collections).extracting(Collection::getId).containsExactlyInAnyOrder(col1.getId(), col2.getId());
     }
 
     @Test
@@ -77,6 +76,18 @@ class CollectionRepositoryTest extends AbstractPostgresTest {
         // Assert
         assertThat(collections).hasSize(1);
         assertThat(collections.get(0).getTitle()).isEqualTo(col1.getTitle());
+    }
+
+    @Test
+    @DisplayName("Should find collection by title fragment and ignore case")
+    void testFindCollectionByTitleFragmentIgnoreCase() {
+        collectionRepository.save(new Collection("title1", cat1Id, "", new HashSet<>(), false, null, user1Id));
+        collectionRepository.save(new Collection("test", cat1Id, "", new HashSet<>(), false, null, user1Id));
+
+        List<Collection> collections = collectionRepository.search("TiTle", null, null, null, null);
+
+        assertThat(collections).hasSize(1);
+        assertThat(collections.get(0).getTitle()).isEqualTo("title1");
     }
 
     @Test
