@@ -70,4 +70,21 @@ class CategoryRepositoryTest {
         assertThat(path.get(0).getCategory()).isEqualTo(c2.getCategory());
         assertThat(path.get(1).getCategory()).isEqualTo(c1.getCategory());
     }
+
+    @Test
+    @DisplayName("Should find the path to root")
+    void testFindCategoryPathToRoot() {
+        // Arrange
+        Category c1 = categoryRepository.save(new Category("Europa", 0L));
+        Category c2 = categoryRepository.save(new Category("Deutschland", c1.getId()));
+        categoryRepository.save(new Category("DDR", c2.getId()));
+
+        // Act
+        List<Category> path = categoryRepository.findCategoryPath(c1.getId());
+
+        // Assert
+        assertThat(path).hasSize(1);
+
+        assertThat(path.get(0).getCategory()).isEqualTo(c1.getCategory());
+    }
 }
