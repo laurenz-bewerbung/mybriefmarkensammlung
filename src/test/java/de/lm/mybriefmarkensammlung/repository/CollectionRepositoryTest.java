@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jdbc.test.autoconfigure.DataJdbcTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
-import org.springframework.context.annotation.Description;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.HashSet;
@@ -163,5 +162,20 @@ class CollectionRepositoryTest extends AbstractPostgresTest {
 
         // Assert
         assertThat(collections).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("Should find collection by user")
+    void testFindCollectionByUser() {
+        // Arrange
+        Collection col1 = collectionRepository.save(new Collection("test", cat1Id, "", new HashSet<>(), false, null, user1Id));
+        Collection col2 = collectionRepository.save(new Collection("test", cat1Id, "", new HashSet<>(), false, null, user2Id));
+
+        // Act
+        List<Collection> collections = collectionRepository.search("", null, null, null, user1Id);
+
+        // Assert
+        assertThat(collections).hasSize(1);
+        assertThat(collections.get(0).getUserId()).isEqualTo(user1Id);
     }
 }
