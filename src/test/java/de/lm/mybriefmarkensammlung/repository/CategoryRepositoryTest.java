@@ -105,6 +105,26 @@ class CategoryRepositoryTest {
         assertThat(path).isEmpty();
     }
 
+    @Test
+    @DisplayName("Should not find categories from a different tree")
+    void testFindPathInParallelTrees() {
+        // Arrange
+        Category root1 = categoryRepository.save(new Category("Nordamerika", null));
+        Category child1 = categoryRepository.save(new Category("USA", root1.getId()));
+
+        Category root2 = categoryRepository.save(new Category("Europa", null));
+        Category child2 = categoryRepository.save(new Category("Deutschland", root2.getId()));
+
+        // Act
+        List<Category> path = categoryRepository.findCategoryPath(child2.getId());
+
+        // Assert
+        assertThat(path).hasSize(2);
+
+        assertThat(path.get(0).getCategory()).isEqualTo(child2.getCategory());
+        assertThat(path.get(1).getCategory()).isEqualTo(root2.getCategory());
+    }
+
     /// findAllChildIds
 
     @Test
