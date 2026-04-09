@@ -145,4 +145,19 @@ class CategoryRepositoryTest {
 
         assertThat(ids).containsAll(List.of(c2.getId(), c3.getId(), c4.getId()));
     }
+
+    @Test
+    @DisplayName("Should return only its own ID when category is a leaf")
+    void testFindAllChildIdsForLeaf() {
+        // Arrange
+        Category root = categoryRepository.save(new Category("Europa", null));
+        Category leaf = categoryRepository.save(new Category("Deutschland", root.getId()));
+
+        // Act
+        List<Long> ids = categoryRepository.findAllChildIds(leaf.getId());
+
+        // Assert
+        assertThat(ids).hasSize(1);
+        assertThat(ids).contains(leaf.getId());
+    }
 }
