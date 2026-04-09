@@ -14,6 +14,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -231,5 +232,31 @@ class CollectionRepositoryTest extends AbstractPostgresTest {
 
         // Assert
         assertThat(collections).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("Should find user ID by collection ID")
+    void testFindUserIdById() {
+        // Arrange
+        Collection col = collectionRepository.save(new Collection("title1", cat1Id, "", new HashSet<>(), false, null, user1Id));
+
+        // Act
+        Optional<Long> foundUserId = collectionRepository.findUserIdById(col.getId());
+
+        // Assert
+        assertThat(foundUserId).contains(user1Id);
+    }
+
+    @Test
+    @DisplayName("Should return empty optional when collection ID does not exist")
+    void testFindUserIdByIdNotFound() {
+        // Arrange
+        Collection col = collectionRepository.save(new Collection("title1", cat1Id, "", new HashSet<>(), false, null, user1Id));
+
+        // Act
+        Optional<Long> foundUserId = collectionRepository.findUserIdById(999L);
+
+        // Assert
+        assertThat(foundUserId).isEmpty();
     }
 }
