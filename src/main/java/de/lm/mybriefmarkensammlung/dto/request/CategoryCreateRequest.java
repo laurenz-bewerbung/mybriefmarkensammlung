@@ -8,6 +8,11 @@ public class CategoryCreateRequest {
     private String category;
     private Long parentId;
 
+    public CategoryCreateRequest(String category, Long parentId) {
+        this.category = category;
+        this.parentId = parentId;
+    }
+
     public String getCategory() {
         return category;
     }
