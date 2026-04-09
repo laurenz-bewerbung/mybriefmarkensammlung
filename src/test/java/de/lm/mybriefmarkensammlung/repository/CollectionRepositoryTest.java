@@ -120,6 +120,19 @@ class CollectionRepositoryTest extends AbstractPostgresTest {
     }
 
     @Test
+    @DisplayName("Should find collections matching any of the provided category IDs")
+    void testFindCollectionByMultipleCategories() {
+        Collection col1 = collectionRepository.save(new Collection("title1", cat1Id, "", new HashSet<>(), false, null, user1Id));
+        Collection col2 = collectionRepository.save(new Collection("title2", cat2Id, "", new HashSet<>(), false, null, user1Id));
+
+        Long[] searchIds = new Long[]{cat1Id, cat2Id};
+        List<Collection> collections = collectionRepository.search("", searchIds, null, null, null);
+
+        assertThat(collections).hasSize(2);
+        assertThat(collections).extracting(Collection::getId).containsExactlyInAnyOrder(col1.getId(), col2.getId());
+    }
+
+    @Test
     @DisplayName("Should find nothing by category")
     void testFindNothingByCategory() {
         // Arrange
